@@ -15,7 +15,7 @@ Built with:
 
 ### 1. Clone the Repo
 ```bash
-git clone https://github.com/YOUR_USERNAME/claimmate.git
+git clone https://github.com/tochukwunwosa/claimmate.git
 cd claimmate
 ```
 
@@ -88,4 +88,4 @@ MIT License.
 
 ---
 
-Need help? DM me on Twitter @yourhandle or file an issue.
+Need help? DM me on Twitter @devtoo or file an issue.
