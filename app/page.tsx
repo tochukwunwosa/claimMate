@@ -1,103 +1,132 @@
-import Image from "next/image";
+"use client"
+
+import { WaitlistForm } from "@/components/waitlist-form"
+import { FeaturesSection } from "@/components/features-section"
+import { Footer } from "@/components/footer"
+import { motion } from "framer-motion"
+import Image from 'next/image'
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3,
+      },
+    },
+  }
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        ease: "easeOut",
+        duration: 0.5,
+      },
+    },
+  }
+
+  const buttonVariants = {
+    initial: { scale: 1 },
+    hover: { scale: 1.05 },
+    tap: { scale: 0.98 },
+  }
+
+  return (
+    <main className="scroll-smooth min-h-screen flex flex-col">
+      {/* Hero Section */}
+      <section className="flex items-center justify-between gap-12 px-4 py-20 max-w-6xl mx-auto">
+        {/* Text Content */}
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="flex-1 flex flex-col items-center md:items-start text-center md:text-left"
+        >
+          <motion.h1
+            variants={item}
+            className="text-4xl md:text-3xl lg:text-5xl font-extrabold text-[#203F30] mb-4 leading-tight"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            Draft Insurance Claims 10× Faster with AI
+          </motion.h1>
+          <motion.p
+            variants={item}
+            className="text-lg md:text-xl text-[#1A1A1A] mb-4"
           >
-            Read our docs
-          </a>
+            ClaimMate helps independent agents create accurate, compliant, and professional claims — in minutes.
+          </motion.p>
+          <motion.p
+            variants={item}
+            className="text-base md:text-lg text-[#1A1A1A] mb-8"
+          >
+            Say goodbye to tedious paperwork and hello to intelligent automation.
+          </motion.p>
+          <motion.a
+            href="#waitlist"
+            variants={buttonVariants}
+            initial="initial"
+            whileHover="hover"
+            whileTap="tap"
+            className="px-6 py-3 bg-[#DBFB1E] text-[#203F30] font-semibold rounded-md hover:bg-[#9CCA46] transition-all shadow-md"
+          >
+            🚀 Join the Waitlist Now
+          </motion.a>
+        </motion.div>
+
+        {/* Image */}
+        <motion.div
+          className="hidden md:flex md:flex-1 overflow-hidden"
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <Image
+            src="/claimmate-preview.png"
+            layout="responsive"
+            width={1024}
+            height={1024}
+            alt="ClaimMate preview"
+            className="mx-auto"
+          />
+        </motion.div>
+      </section>
+
+
+
+
+      {/* Waitlist Form Section */}
+      <motion.section
+        id="waitlist"
+        className="py-16 px-4 bg-[#F4F4F4]"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+      >
+        <div className="max-w-md mx-auto">
+          <motion.h2
+            className="text-2xl font-bold text-[#203F30] mb-6 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            Get Early Access
+          </motion.h2>
+          <WaitlistForm />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+      </motion.section>
+
+      {/* Features Preview Section */}
+      <FeaturesSection />
+
+      {/* Footer */}
+      <Footer />
+    </main>
+  )
 }
