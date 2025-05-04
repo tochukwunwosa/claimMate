@@ -73,10 +73,10 @@ export function WaitlistForm() {
         >
           <CheckCircle2 className="h-12 w-12 text-[#9CCA46] mx-auto mb-4" />
           <h3 className="text-xl font-semibold text-[#203F30] mb-2">
-            You're on the list!
+            {`You're on the list!`}
           </h3>
           <p className="text-[#1A1A1A] mb-5">
-            Thanks for joining our waitlist and sharing your feedback. We'll notify you when ClaimMate is ready.
+            {`Thanks for joining our waitlist and sharing your feedback. We'll notify you when ClaimMate is ready.`}
           </p>
           <Button
             onClick={() => setIsSuccess(false)}
@@ -102,7 +102,7 @@ export function WaitlistForm() {
                 {[
                   { name: "name", label: "Full Name", placeholder: "John Doe" },
                   { name: "email", label: "Email Address", placeholder: "john@example.com" },
-                ].map(({ name, label, placeholder }, idx) => (
+                ].map(({ name, label, placeholder }) => (
                   <FormField
                     key={name}
                     control={control}
@@ -174,7 +174,7 @@ export function WaitlistForm() {
                 name="featureRequests"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Features you'd love in ClaimMate</FormLabel>
+                    <FormLabel>{`Features you'd love in ClaimMate`}</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="E.g., Template library, automation, integrations..."
