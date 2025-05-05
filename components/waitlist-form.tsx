@@ -25,6 +25,7 @@ import {
 } from "./ui/form"
 import { CheckCircle2 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+import emailjs from '@emailjs/browser';
 
 type WaitlistValues = z.infer<typeof waitListSchema>
 
@@ -51,14 +52,50 @@ export function WaitlistForm() {
 
   const onSubmit = async (data: WaitlistValues) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      console.log("Submitted:", data)
-      setIsSuccess(true)
-      reset()
+      //API route to send data to Supabase
+      const response = await fetch('/api/waitlist/submit-form', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Send confirmation email to the user via EmailJS
+        const templateParams = {
+          name: data.name,
+          email: data.email,
+        };
+        
+
+        emailjs.send(
+          'service_6i9i33a',
+          'template_fu3tcqc', 
+          templateParams, 
+          {
+          publicKey: '8t92pUPrR6tvsert3',
+        }).then(
+          (result) => {
+            console.log('Email sent successfully:', result.text);
+          },
+          (error) => {
+            console.error('Error sending email:', error.text);
+          }
+        );
+
+        setIsSuccess(true);
+        reset();
+      } else {
+        throw new Error(result.message || 'Something went wrong');
+      }
     } catch (error) {
-      console.error(error)
+      console.error('Error submitting form:', error);
     }
-  }
+  };
+
 
   return (
     <AnimatePresence mode="wait">

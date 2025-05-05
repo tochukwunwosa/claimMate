@@ -87,7 +87,6 @@ export default function Home() {
         >
           <Image
             src="/claimmate-preview.png"
-            layout="responsive"
             width={1024}
             height={1024}
             alt="ClaimMate preview"
