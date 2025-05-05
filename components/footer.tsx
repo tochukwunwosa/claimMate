@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { Twitter, Linkedin, Mail } from "lucide-react"
 import { motion } from "framer-motion"
+import Image from 'next/image'
 
 export function Footer() {
   const socialLinks = [
@@ -27,7 +28,12 @@ export function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <h3 className="text-lg font-semibold text-[#203F30] mb-3">About ClaimMate</h3>
+            <div className='flex items-center mb-3'>
+              <div className='w-10 h-10 overflow-hidden'>
+                <Image src='/logos/claimmate-logo-icon-lemon-removebg.png' width={276} height={284} alt='ClaimMate logo.' className="size-full" />
+              </div>
+              <h3 className="text-lg font-semibold text-[#203F30]">About ClaimMate</h3>
+            </div>
             <p className="text-sm text-[#1A1A1A] max-w-md">
               ClaimMate is revolutionizing the insurance claims process with AI-powered drafting tools designed
               specifically for insurance professionals. Our platform helps agents save time and improve accuracy.
