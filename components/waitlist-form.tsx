@@ -69,14 +69,14 @@ export function WaitlistForm() {
           name: data.name,
           email: data.email,
         };
-        
+        const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID 
+        const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
+        const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
 
-        emailjs.send(
-          'service_6i9i33a',
-          'template_fu3tcqc', 
-          templateParams, 
-          {
-          publicKey: '8t92pUPrR6tvsert3',
+        if(!serviceId || !templateId || !publicKey) return null
+
+        emailjs.send( serviceId, templateId, templateParams, {
+          publicKey,
         }).then(
           (result) => {
             console.log('Email sent successfully:', result.text);
