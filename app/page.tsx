@@ -65,7 +65,7 @@ export default function Home() {
             Say goodbye to tedious paperwork and hello to intelligent automation.
           </motion.p>
           <motion.a
-            href="waitlist"
+            href="#waitlist"
             variants={buttonVariants}
             initial="initial"
             whileHover="hover"
