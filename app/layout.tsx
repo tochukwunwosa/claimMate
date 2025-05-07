@@ -1,11 +1,6 @@
 import type React from "react"
-import "@/app/globals.css"
-import { Inter } from "next/font/google"
-import Script from 'next/script'
 import RootLayoutClient from "./layout.client"
 // import { ThemeProvider } from "@/components/theme-provider"
-
-const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
   title: "ClaimMate - AI-powered Claims Drafting for Insurance Agents",
