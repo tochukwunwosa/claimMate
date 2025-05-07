@@ -12,11 +12,11 @@ export const metadata = {
   openGraph: {
     title: 'ClaimMate – AI-Powered Insurance Claim Assistant',
     description: 'Streamline your claim drafting process with AI.',
-    url: 'https://claimmate.vercel.app', // your site URL
+    url: 'https://claimmate.vercel.app', 
     siteName: 'ClaimMate',
     images: [
       {
-        url: 'https://claimmate.vercel.app/og-image.png', // full URL to the OG image
+        url: 'https://claimmate.vercel.app/og-image.png', 
         width: 1200,
         height: 630,
         alt: 'ClaimMate OG Image',
