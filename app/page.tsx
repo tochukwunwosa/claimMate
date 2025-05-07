@@ -2,7 +2,6 @@
 
 import { WaitlistForm } from "@/components/waitlist-form"
 import { FeaturesSection } from "@/components/features-section"
-import { Footer } from "@/components/footer"
 import { motion } from "framer-motion"
 import Image from 'next/image'
 
@@ -39,7 +38,7 @@ export default function Home() {
   return (
     <main className="scroll-smooth min-h-screen flex flex-col">
       {/* Hero Section */}
-      <section className="flex items-center justify-between gap-12 px-4 py-20 max-w-6xl mx-auto">
+      <section id='about' className="flex items-center justify-between gap-12 px-4 py-24 max-w-6xl mx-auto">
         {/* Text Content */}
         <motion.div
           variants={container}
@@ -66,7 +65,7 @@ export default function Home() {
             Say goodbye to tedious paperwork and hello to intelligent automation.
           </motion.p>
           <motion.a
-            href="#waitlist"
+            href="waitlist"
             variants={buttonVariants}
             initial="initial"
             whileHover="hover"
@@ -101,7 +100,7 @@ export default function Home() {
       {/* Waitlist Form Section */}
       <motion.section
         id="waitlist"
-        className="py-16 px-4 bg-[#F4F4F4]"
+        className="py-24 px-4 bg-[#F4F4F4]"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
@@ -124,8 +123,6 @@ export default function Home() {
       {/* Features Preview Section */}
       <FeaturesSection />
 
-      {/* Footer */}
-      <Footer />
     </main>
   )
 }

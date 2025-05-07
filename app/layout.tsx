@@ -2,6 +2,7 @@ import type React from "react"
 import "@/app/globals.css"
 import { Inter } from "next/font/google"
 import Script from 'next/script'
+import RootLayoutClient from "./layout.client"
 // import { ThemeProvider } from "@/components/theme-provider"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -32,26 +33,6 @@ export const metadata = {
   },
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  return (
-    <html lang="en">
-      <head>
-        <Script
-          async
-          defer
-          src="https://cloud.umami.is/script.js"
-          data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
-        />
-      </head>
-      <body className={inter.className}>
-        {/* <ThemeProvider attribute="class" defaultTheme="light" enableSystem> */}
-          {children}
-        {/* </ThemeProvider> */}
-      </body>
-    </html>
-  )
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return <RootLayoutClient>{children}</RootLayoutClient>;
 }

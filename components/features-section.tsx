@@ -30,7 +30,7 @@ const features: Feature[] = [
 
 export function FeaturesSection() {
   return (
-    <section className="py-16 px-4" aria-labelledby="features-heading">
+    <section id='features' className="py-24 px-4" aria-labelledby="features-heading">
       <div className="max-w-6xl mx-auto">
         <motion.h2
           id="features-heading"

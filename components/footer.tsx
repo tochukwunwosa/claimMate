@@ -14,7 +14,7 @@ export function Footer() {
 
   return (
     <motion.footer
-      className="bg-[#F4F4F4] py-12 px-4"
+      className="bg-[#F4F4F4] pb-12 pt-20 px-4"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
