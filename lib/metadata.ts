@@ -19,6 +19,9 @@ export function generateMeta({
   return {
     title,
     description,
+    other: {
+      'google-site-verification': 'google020903c422c1dbcd.html'
+    },
     keywords: [
       'ClaimMate',
       'insurance claims software',
