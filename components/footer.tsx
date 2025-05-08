@@ -32,9 +32,9 @@ export function Footer() {
               <div className='w-10 h-10 overflow-hidden'>
                 <Image src='/logos/claimmate-logo-icon-lemon-removebg.png' width={276} height={284} alt='ClaimMate logo.' className="size-full" />
               </div>
-              <h3 className="text-lg font-semibold text-[#203F30]">About ClaimMate</h3>
+              <h3 className="text-lg font-semibold text-primary">About ClaimMate</h3>
             </div>
-            <p className="text-sm text-[#1A1A1A] max-w-md">
+            <p className="text-sm text-foreground max-w-md">
               ClaimMate is revolutionizing the insurance claims process with AI-powered drafting tools designed
               specifically for insurance professionals. Our platform helps agents save time and improve accuracy.
             </p>
@@ -47,7 +47,7 @@ export function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <h3 className="text-lg font-semibold text-[#203F30] mb-3">Follow the build</h3>
+            <h3 className="text-lg font-semibold text-primary mb-3">Follow the build</h3>
             <div className="flex space-x-4">
               {socialLinks.map((link, index) => (
                 <motion.div
@@ -59,7 +59,7 @@ export function Footer() {
                   <Link
                     href={link.href}
                     target="_blank"
-                    className="text-[#203F30] hover:text-[#9CCA46] transition-colors"
+                    className="text-primary hover:text-accent transition-colors"
                   >
                     {link.icon}
                     <span className="sr-only">{link.label}</span>
@@ -69,11 +69,11 @@ export function Footer() {
             </div>
 
             <div className="mt-6">
-              <p className="text-sm text-[#1A1A1A]">
+              <p className="text-sm text-foreground">
                 Contact:{" "}
                 <motion.a
                   href="mailto:hello@claimmate.com"
-                  className="text-[#203F30] hover:text-[#9CCA46]"
+                  className="text-primary hover:text-accent"
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.2 }}
                 >
@@ -91,7 +91,7 @@ export function Footer() {
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          <p className="text-sm text-center text-[#1A1A1A]">
+          <p className="text-sm text-center text-foreground">
             &copy; {new Date().getFullYear()} ClaimMate. All rights reserved.
           </p>
         </motion.div>

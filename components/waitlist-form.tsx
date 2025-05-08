@@ -102,14 +102,14 @@ export function WaitlistForm() {
       {isSuccess ? (
         <motion.div
           key="success"
-          className="p-6 bg-white rounded-lg shadow-md border border-[#9CCA46] text-center"
+          className="p-6 bg-white rounded-lg shadow-md border border-accent text-center"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.9 }}
           transition={{ duration: 0.35, ease: "easeOut" }}
         >
-          <CheckCircle2 className="h-12 w-12 text-[#9CCA46] mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-[#203F30] mb-2">
+          <CheckCircle2 className="h-12 w-12 text-accent mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-primary mb-2">
             {`You're on the list!`}
           </h3>
           <p className="text-[#1A1A1A] mb-5">
@@ -118,7 +118,7 @@ export function WaitlistForm() {
           <Button
             onClick={() => setIsSuccess(false)}
             variant="outline"
-            className="cursor-pointer border-[#203F30] hover:text-[#203F30] text-[#203F30] hover:bg-[#F4F4F4]"
+            className="cursor-pointer border-primary hover:text-primary text-primary hover:bg-muted"
           >
             Submit another response
           </Button>
@@ -150,7 +150,7 @@ export function WaitlistForm() {
                         <FormControl>
                           <Input
                             placeholder={placeholder}
-                            className="border-[#203F30] focus:ring-[#9CCA46]"
+                            className="border-primary focus:ring-accent"
                             {...field}
                           />
                         </FormControl>
@@ -170,7 +170,7 @@ export function WaitlistForm() {
                     <FormLabel>Profession</FormLabel>
                     <FormControl>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <SelectTrigger className="border-[#203F30] focus:ring-[#9CCA46]">
+                        <SelectTrigger className="border-primary focus:ring-accent">
                           <SelectValue placeholder="Select your profession" />
                         </SelectTrigger>
                         <SelectContent>
@@ -195,7 +195,7 @@ export function WaitlistForm() {
                     <FormControl>
                       <Textarea
                         placeholder="E.g., Time-consuming documentation, compliance issues..."
-                        className="border-[#203F30] focus:ring-[#9CCA46]"
+                        className="border-primary focus:ring-accent"
                         rows={3}
                         {...field}
                       />
@@ -215,7 +215,7 @@ export function WaitlistForm() {
                     <FormControl>
                       <Textarea
                         placeholder="E.g., Template library, automation, integrations..."
-                        className="border-[#203F30] focus:ring-[#9CCA46]"
+                        className="border-primary focus:ring-accent"
                         rows={3}
                         {...field}
                       />
@@ -232,7 +232,7 @@ export function WaitlistForm() {
               >
                 <Button
                   type="submit"
-                  className="cursor-pointer w-full bg-[#203F30] text-white hover:bg-[#1A1A1A]"
+                  className="cursor-pointer w-full bg-primary text-white hover:bg-[#1A1A1A]"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? "Submitting..." : "Join Waitlist"}

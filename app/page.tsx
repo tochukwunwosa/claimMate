@@ -48,19 +48,19 @@ export default function Home() {
         >
           <motion.h1
             variants={item}
-            className="text-4xl md:text-3xl lg:text-5xl font-extrabold text-[#203F30] mb-4 leading-tight"
+            className="text-4xl md:text-3xl lg:text-5xl font-extrabold text-primary mb-4 leading-tight"
           >
             Draft Insurance Claims 10× Faster with AI
           </motion.h1>
           <motion.p
             variants={item}
-            className="text-lg md:text-xl text-[#1A1A1A] mb-4"
+            className="text-lg md:text-xl text-foreground mb-4"
           >
             ClaimMate helps independent agents create accurate, compliant, and professional claims — in minutes.
           </motion.p>
           <motion.p
             variants={item}
-            className="text-base md:text-lg text-[#1A1A1A] mb-8"
+            className="text-base md:text-lg text-foreground mb-8"
           >
             Say goodbye to tedious paperwork and hello to intelligent automation.
           </motion.p>
@@ -70,7 +70,7 @@ export default function Home() {
             initial="initial"
             whileHover="hover"
             whileTap="tap"
-            className="px-6 py-3 bg-[#DBFB1E] text-[#203F30] font-semibold rounded-md hover:bg-[#9CCA46] transition-all shadow-md"
+            className="px-6 py-3 bg-secondary text-primary font-semibold rounded-md hover:bg-accent transition-all shadow-md"
           >
             🚀 Join the Waitlist Now
           </motion.a>
@@ -100,7 +100,7 @@ export default function Home() {
       {/* Waitlist Form Section */}
       <motion.section
         id="waitlist"
-        className="py-24 px-4 bg-[#F4F4F4]"
+        className="py-24 px-4 bg-muted"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
@@ -108,7 +108,7 @@ export default function Home() {
       >
         <div className="max-w-md mx-auto">
           <motion.h2
-            className="text-2xl font-bold text-[#203F30] mb-6 text-center"
+            className="text-2xl font-bold text-primary mb-6 text-center"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

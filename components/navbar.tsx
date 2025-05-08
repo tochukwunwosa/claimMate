@@ -7,6 +7,11 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 
+interface NavType {
+  name: string;
+  href: string;
+}
+
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -39,7 +44,7 @@ export function Navbar() {
 
   const toggleMenu = () => setIsOpen(!isOpen)
 
-  const navItems = [
+  const navItems: NavType[] = [
     { name: "Home", href: "/" },
     { name: "Features", href: "#features" },
     { name: "About", href: "#about" },
@@ -66,25 +71,38 @@ export function Navbar() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-8">
+        <nav className="hidden md:flex items-center space-x-20">
           <ul className="flex space-x-6">
             {navItems.map((item) => (
               <li key={item.name}>
-                <Link href={item.href} className="text-[#1A1A1A] hover:text-[#203F30] font-medium transition-colors">
+                <Link href={item.href} className="text-foreground hover:text-primary font-medium transition-colors">
                   {item.name}
                 </Link>
               </li>
             ))}
           </ul>
-          <Link href="#waitlist">
-            <Button className="cursor-pointer bg-[#DBFB1E] text-[#203F30] hover:bg-[#9CCA46] font-semibold transition-colors">
+          {/* <div className="flex items-center space-x-4">
+            <Link
+              href="/auth/login"
+              className="cursor-pointer text-foreground hover:text-primary font-semibold transition-colors"
+            >
+              Login
+            </Link>
+            <Link href="/auth/signup">
+              <Button className="cursor-pointer bg-secondary text-primary hover:bg-accent font-semibold transition-colors">
+                Signup
+              </Button>
+            </Link>
+          </div> */}
+          <Link href="#waitlist" onClick={() => setIsOpen(false)} className="block w-full">
+            <Button className="cursor-pointer w-full bg-secondary text-primary hover:bg-accent font-semibold transition-colors">
               Join the Waitlist
             </Button>
           </Link>
         </nav>
 
         {/* Mobile Menu Button */}
-        <button className="cursor-pointer md:hidden text-[#203F30] focus:outline-none" onClick={toggleMenu} aria-label="Toggle menu">
+        <button className="cursor-pointer md:hidden text-primary focus:outline-none" onClick={toggleMenu} aria-label="Toggle menu">
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
@@ -105,16 +123,34 @@ export function Navbar() {
                   <li key={item.name}>
                     <Link
                       href={item.href}
-                      className="block w-fit py-2 text-[#1A1A1A] hover:text-[#203F30] font-medium transition-colors"
+                      className="block w-fit py-2 text-foreground hover:text-primary font-medium transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
                       {item.name}
                     </Link>
                   </li>
                 ))}
-                <li className="pt-2">
+                {/* <li className="pt-4">
+                  <div className="flex flex-col space-y-3">
+                    <Link href="/auth/login" onClick={() => setIsOpen(false)} className="block w-full">
+                      <Button
+                        variant="outline"
+                        className="cursor-pointer w-full border-primary text-primary hover:text-primary hover:bg-[#F4F4F4] font-semibold"
+                      >
+                        Login
+                      </Button>
+                    </Link>
+                    <Link href="/auth/signup" onClick={() => setIsOpen(false)} className="block w-full">
+                      <Button className="cursor-pointer w-full bg-secondary text-primary hover:bg-accent font-semibold">
+                        Signup
+                      </Button>
+                    </Link>
+                  </div>
+                </li> */}
+                {/* Keep the commented out waitlist button */}
+                <li className="pt-2 ">
                   <Link href="#waitlist" onClick={() => setIsOpen(false)} className="block w-full">
-                    <Button className="cursor-pointer w-full bg-[#DBFB1E] text-[#203F30] hover:bg-[#9CCA46] font-semibold transition-colors">
+                    <Button className="cursor-pointer w-full bg-secondary text-primary hover:bg-accent font-semibold transition-colors">
                       Join the Waitlist
                     </Button>
                   </Link>
@@ -127,3 +163,4 @@ export function Navbar() {
     </header>
   )
 }
+
