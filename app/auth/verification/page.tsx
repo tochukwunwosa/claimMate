@@ -1,6 +1,6 @@
 import { Suspense } from "react"
-import VerificationContent from "./verification-content"
 import LoadingSpinner from "@/components/ui/loading-spinner"
+import VerificationContent from "./verification-content"
 
 export default function VerificationPage() {
   return (

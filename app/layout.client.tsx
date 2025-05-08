@@ -9,6 +9,7 @@ import { Footer } from '@/components/footer';
 import './globals.css';
 import { Inter } from 'next/font/google';
 import { usePathname } from 'next/navigation';
+import { jsonLd } from '@/lib/jsonld';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,14 +24,15 @@ export default function RootLayoutClient({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Umami analytics script (currently commented out) */}
-        
+        {/* Umami analytics script (currently commented out) */}        
         <Script
           async
           defer
           src="https://cloud.umami.is/script.js"
           data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
-          /> 
+          />
+          {/* SEO */}
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
        
       </head>
       <body
