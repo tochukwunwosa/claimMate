@@ -20,7 +20,7 @@ export function generateMeta({
     title,
     description,
     other: {
-      'google-site-verification': 'google020903c422c1dbcd.html'
+      'google-site-verification': 'google020903c422c1dbcd'
     },
     keywords: [
       'ClaimMate',
