@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://claimmate.vercel.app
+
+# Sitemaps
+Sitemap: https://claimmate.vercel.app/sitemap.xml
