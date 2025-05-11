@@ -1,11 +1,10 @@
 "use client"
 
-import React, {useState, useCallback} from "react"
+import React, { useState, useCallback, useEffect } from "react"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
-import { supabase } from '@/lib/supabase'
 import { motion } from "framer-motion"
 import { Eye, EyeOff, AlertCircle } from "lucide-react"
 
@@ -14,6 +13,9 @@ import { Input } from "@/components/ui/input"
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form"
 import Link from "next/link"
 import LoadingSpinner from '@/components/ui/loading-spinner'
+import { cn } from "@/lib/utils"
+import { loginUser, resetPasswordEmail } from '@/action/auth'
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -26,51 +28,63 @@ export default function SignIn() {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [storedEmail, , removeStoredEmail] = useLocalStorage<string>("user-email", '')
 
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
+    mode: "onChange",
   })
+  
+
+  // Once storedEmail is available, update the form
+  useEffect(() => {
+    if (storedEmail) {
+      form.reset({
+        email: storedEmail,
+        password: "",
+      })
+    }
+  }, [storedEmail, form])
+
 
   const onSubmit = useCallback(async (values: FormSchemaType) => {
     setError(null)
-
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email: values.email,
-      password: values.password,
-    })
-
-    if (signInError) {
-      setError(signInError.message)
-    } else {
-      router.push("/dashboard")
-      router.refresh()
+  
+    const result = await loginUser(values.email, values.password)
+  
+    if (result?.error) {
+      setError(result.error)
+      return
     }
-  }, [router])
+  
+    if (result.onboarded) {
+      router.push('/dashboard')
+    } else {
+      router.push('/onboarding')
+    }
+  
+    removeStoredEmail()
+  }, [router, removeStoredEmail])  
 
-  const handleResetPassword = useCallback(async () => {
+  // reset password handler
+  const handleresetPasswordEmail = useCallback(async () => {
     const email = form.getValues("email")
     if (!email) {
       setError("Please enter your email address to reset your password")
       return
     }
 
-    try {
-      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/reset-password`,
-      })
-
-      if (resetError) throw resetError
-
-      alert("Password reset link sent to your email")
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to send reset password email")
+    const result = await resetPasswordEmail(email)
+    if (result?.error) {
+      setError(result.error)
+    } else {
+      alert("If this email exists, you will receieve a reset link")
     }
   }, [form])
-
 
   return (
     <>
@@ -113,7 +127,7 @@ export default function SignIn() {
           <div className="bg-white rounded-lg shadow-sm p-8">
             <div className="text-center mb-8">
               <h1 className="text-2xl font-bold text-[#203F30]">Welcome back</h1>
-              <p className="text-[#1A1A1A] mt-2">Sign in to your ClaimMate account</p>
+              <p className="text-[#1A1A1A] mt-2">Log in to your ClaimMate account</p>
             </div>
 
             {error && (
@@ -148,7 +162,7 @@ export default function SignIn() {
                         <FormLabel>Password</FormLabel>
                         <button
                           type="button"
-                          onClick={handleResetPassword}
+                          onClick={handleresetPasswordEmail}
                           className="cursor-pointer text-xs text-[#203F30] hover:underline"
                         >
                           Forgot password?
@@ -180,14 +194,14 @@ export default function SignIn() {
                 <Button
                   type="submit"
                   aria-label='Submit'
-                  className="cursor-pointer w-full bg-secondary text-primary hover:bg-accent font-semibold disabled:cursor-not-allowed"
-                  disabled={form.formState.isSubmitting}
+                  className={cn("w-full bg-secondary text-primary hover:bg-accent font-semibold disabled:hover:bg-secondary")}
+                  disabled={form.formState.isSubmitting || !form.formState.isValid}
                 >
                   {form.formState.isSubmitting ?
-                    <div className='flex items-center gap-2'>Loging in... <LoadingSpinner size={14} /></div> 
-                  : "Login"}
+                    <div className='flex items-center gap-2'>Logging in... <LoadingSpinner size={14} /></div>
+                    : "Login"}
                 </Button>
-                  
+
               </form>
             </Form>
 

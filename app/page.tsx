@@ -122,7 +122,6 @@ export default function Home() {
 
       {/* Features Preview Section */}
       <FeaturesSection />
-
     </main>
   )
 }

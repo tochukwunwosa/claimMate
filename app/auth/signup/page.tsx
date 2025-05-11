@@ -1,19 +1,20 @@
 "use client"
 
-import React, { useCallback, useMemo, useState } from "react"
+import React, { useCallback, useMemo, useState, useEffect } from "react"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
-import { supabase } from '@/lib/supabase'
 import { motion } from "framer-motion"
 import { Eye, EyeOff } from "lucide-react"
 import LoadingSpinner from '@/components/ui/loading-spinner'
 import Link from 'next/link'
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { registerUser } from "@/action/auth"
 
 const formSchema = z
   .object({
@@ -27,14 +28,16 @@ const formSchema = z
   })
 
 type FormSchemaType = z.infer<typeof formSchema>
-
 export default function SignUp() {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
+  const [ , setStoredEmail ] = useLocalStorage<string>("user-email", '')
+  const [redirectTime, setRedirectTime] = useState(5)
+  const [shouldRedirect, setShouldRedirect] = useState(false)
 
   const defaultValues = useMemo(() => ({
-    email: "",
+    email: '',
     password: "",
     confirmPassword: "",
   }), [])
@@ -42,29 +45,54 @@ export default function SignUp() {
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
     defaultValues,
+    mode: "onChange",
   })
 
   const toggleShowPassword = useCallback(() => {
     setShowPassword((prev) => !prev)
   }, [])
 
-  const onSubmit = useCallback(async (values: FormSchemaType) => {
-    setServerError(null)
+  useEffect(() => {
+  if (!shouldRedirect) return
 
-    const { data, error } = await supabase.auth.signUp({
-      email: values.email,
-      password: values.password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
+  const timer = setInterval(() => {
+    setRedirectTime((prev) => {
+      if (prev === 1) {
+        clearInterval(timer)
+        return 0
+      }
+      return prev - 1
     })
+  }, 1000)
 
-    if (error) {
-      setServerError(error.message)
-    } else if (data?.user) {
-      router.push("/auth/verification?email=" + encodeURIComponent(values.email))
+  return () => clearInterval(timer)
+  }, [shouldRedirect, router])
+  
+  // Separate effect for handling the navigation
+  if (redirectTime === 0) {
+    router.push("/auth/login")
+  }
+
+  //signup handler
+ const onSubmit = useCallback(async (values: FormSchemaType) => {
+  setServerError(null)
+
+  const result = await registerUser(values.email, values.password)
+
+    if (result?.error) {
+      if (result.error.toLowerCase().includes("user already registered") || result.error.toLowerCase().includes("email")) {
+        setStoredEmail(values.email)
+        setServerError("An account with this email already exists. Redirecting to login...")
+        setShouldRedirect(true)
+        return
+      } else {
+        setServerError(result.error)
+        return
+      }
     }
-  }, [router])
+
+    router.push("/auth/verification?email=" + encodeURIComponent(values.email))
+  }, [router, setStoredEmail])
 
 
   return (
@@ -112,10 +140,14 @@ export default function SignUp() {
             </div>
 
             {serverError && (
-              <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-600">
+              <p className="text-red-500 mt-2 text-sm">
                 {serverError}
-              </div>
+                {serverError.includes("Redirecting") && (
+                  <span className="ml-1">({redirectTime}s)</span>
+                )}
+              </p>
             )}
+
 
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
@@ -181,7 +213,8 @@ export default function SignUp() {
                   type="submit"
                   aria-label='Submit'
                   className="cursor-pointer w-full bg-secondary text-primary hover:bg-accent font-semibold disabled:cursor-not-allowed"
-                  disabled
+                  disabled={form.formState.isSubmitting || !form.formState.isValid}
+                  
                 >
                   {form.formState.isSubmitting ? 
                     <div className='flex items-center gap-2'>Creating account... <LoadingSpinner size={14} /></div>  : "Sign up"}

@@ -10,6 +10,7 @@ import './globals.css';
 import { Inter } from 'next/font/google';
 import { usePathname } from 'next/navigation';
 import { jsonLd } from '@/lib/jsonld';
+import { UserProvider } from '@/contexts/UserContext'
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,17 +20,21 @@ export default function RootLayoutClient({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const hideHeaderFooter = pathname !== "/auth" && pathname.startsWith("/auth/");
+  const hideHeaderFooter = (
+  (pathname.startsWith("/auth/") && pathname !== "/auth") ||
+  (pathname.startsWith("/dashboard")) || (pathname.startsWith('/onboarding'))
+)
+
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Umami analytics script (currently commented out) */}        
+        {/* Umami analytics script */}        
         <Script
           async
           defer
           src="https://cloud.umami.is/script.js"
-          data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
+          // data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
           />
           {/* SEO */}
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
@@ -40,7 +45,11 @@ export default function RootLayoutClient({
       >
         <ErrorBoundary>
           {!hideHeaderFooter && <Navbar />}
-          <AnimatePresence>{children}</AnimatePresence>
+          <AnimatePresence>
+            <UserProvider>
+            {children}
+            </UserProvider>
+          </AnimatePresence>
           {!hideHeaderFooter && <Footer />}
         </ErrorBoundary>
       </body>

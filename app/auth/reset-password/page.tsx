@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useRouter } from "next/navigation"
-import { supabase } from '@/lib/supabase'
 import { motion } from "framer-motion"
 import { Eye, EyeOff, AlertCircle, CheckCircle } from "lucide-react"
 import { z } from "zod"
@@ -14,6 +13,7 @@ import LoadingSpinner from '@/components/ui/loading-spinner'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { resetPassword } from '@/action/auth'
 
 const formSchema = z
   .object({
@@ -40,6 +40,7 @@ export default function ResetPassword() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues,
+    mode: 'onChange'
   })
 
   const {
@@ -65,27 +66,24 @@ export default function ResetPassword() {
     }
   }, [success, router])
 
+  // reset password handler
   const onSubmit = useCallback(async (values: z.infer<typeof formSchema>) => {
-    setServerError(null)
+  setServerError(null)
 
-    try {
-      const { error } = await supabase.auth.updateUser({
-        password: values.password,
-      })
+  const result = await resetPassword(values.password)
 
-      if (error) throw error
-      setSuccess(true)
-    } catch (err) {
-      console.error("Reset password error:", err)
-      setServerError(err instanceof Error ? err.message : "Failed to reset password")
-    }
-  }, [])
+  if (result?.error) {
+    setServerError(result.error)
+  } else {
+    setSuccess(true)
+  }
+}, [])
 
 
   return (
     <>
       <div className="min-h-screen pt-10 px-4 flex items-center justify-center">
-         {/* go back home */}
+        {/* go back home */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -210,9 +208,9 @@ export default function ResetPassword() {
                   <Button
                     type="submit"
                     className="w-full bg-primary text-white hover:bg-foreground font-semibold"
-                    disabled={isSubmitting}
+                    disabled={form.formState.isSubmitting || !form.formState.isValid}
                   >
-                    {isSubmitting ? <div className='flex items-center gap-2'>Resetting Password... <LoadingSpinner size={14} /></div>  : "Reset password"}
+                    {isSubmitting ? <div className='flex items-center gap-2'>Resetting Password... <LoadingSpinner size={14} /></div> : "Reset password"}
                   </Button>
                 </form>
               </Form>

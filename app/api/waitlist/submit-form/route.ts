@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/client";
 
 // POST method
 export async function POST(req: NextRequest) {
   try {
     const { name, email, profession, painPoints, featureRequests } =
       await req.json();
+      const supabase = createClient()
 
     // Insert data into Supabase
     const { error } = await supabase.from("waitlist").insert([
