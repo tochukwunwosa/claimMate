@@ -26,6 +26,7 @@ import {
 import { CheckCircle2 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import emailjs from '@emailjs/browser';
+import { submitWaitlistForm } from "@/action/waitlist"
 
 type WaitlistValues = z.infer<typeof waitListSchema>
 
@@ -50,52 +51,41 @@ export function WaitlistForm() {
     reset,
   } = form
 
+  // API route to send data to Supabase
   const onSubmit = async (data: WaitlistValues) => {
     try {
-      //API route to send data to Supabase
-      const response = await fetch('/api/waitlist/submit-form', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
 
-      const result = await response.json();
+      // Call the server action
+      const result = await submitWaitlistForm(data);
 
-      if (response.ok) {
-        // Send confirmation email to the user via EmailJS
-        const templateParams = {
-          name: data.name,
-          email: data.email,
-        };
-        const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID 
-        const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
-        const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+      if (result.success) {
+        // Send confirmation email via EmailJS (client-side)
+        const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+        const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+        const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
 
-        if(!serviceId || !templateId || !publicKey) return null
-
-        emailjs.send( serviceId, templateId, templateParams, {
-          publicKey,
-        }).then(
-          (result) => {
-            console.log('Email sent successfully:', result.text);
-          },
-          (error) => {
-            console.error('Error sending email:', error.text);
+        if (serviceId && templateId && publicKey) {
+          try {
+            await emailjs.send(
+              serviceId,
+              templateId,
+              { name: data.name, email: data.email },
+              { publicKey }
+            );
+            console.log('Confirmation email sent successfully');
+          } catch (emailError) {
+            console.error('Error sending confirmation email:', emailError);
+            // Continue with success flow even if email fails
           }
-        );
+        }
 
         setIsSuccess(true);
         reset();
-      } else {
-        throw new Error(result.message || 'Something went wrong');
-      }
+      } 
     } catch (error) {
-      console.error('Error submitting form:', error);
-    }
+      console.error('Error in form submission:', error);
+    } 
   };
-
 
   return (
     <AnimatePresence mode="wait">
