@@ -6,7 +6,6 @@ export async function updateSession(request: NextRequest) {
     request,
   });
 
-  
   const pathname = request.nextUrl.pathname;
 
   const supabase = createServerClient(
@@ -42,27 +41,32 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (
-    user &&
-    (pathname.startsWith("/auth") ||
-      pathname.startsWith("/login"))
-  ) {
+  // If the user is not authenticated and trying to access the dashboard
+  if (!user && pathname.startsWith("/dashboard")) {
     const url = request.nextUrl.clone();
-    url.pathname = "/onboarding"; // or wherever you want to send authenticated users
+    url.pathname = "/auth/login"; // Redirect to login page
     return NextResponse.redirect(url);
   }
 
+  // If the user is not authenticated and trying to access any other page
   if (
     !user &&
-    !pathname.startsWith("/login") &&
-    !pathname.startsWith("/auth")
+    pathname !== "/auth/login" &&
+    pathname !== "/auth" &&
+    pathname !== "/"
   ) {
-    // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
-    url.pathname = "/auth/login";
+    url.pathname = "/"; // Redirect to homepage
     return NextResponse.redirect(url);
   }
 
+  // If the user is authenticated and trying to access /auth or /login, redirect them to homepage
+  if (user && (pathname.startsWith("/auth") || pathname.startsWith("/login"))) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/"; // Redirect to homepage
+    return NextResponse.redirect(url);
+  }
+  
   // ✅ Enforce onboarding status
   if (user && pathname.startsWith("/dashboard")) {
     const { data: profile, error } = await supabase
