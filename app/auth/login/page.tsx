@@ -28,7 +28,8 @@ export default function SignIn() {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [storedEmail, , removeStoredEmail] = useLocalStorage<string>("user-email", '')
+  const [storedEmail, , removeStoredEmail] = useLocalStorage("user-email", '')
+  const [isRedirecting, setIsRedirecting] = useState(false)
 
   const form = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
@@ -62,6 +63,7 @@ export default function SignIn() {
     }
   
     if (result.onboarded) {
+      setIsRedirecting(true) 
       router.push('/dashboard')
     } else {
       router.push('/onboarding')
@@ -87,7 +89,7 @@ export default function SignIn() {
   }, [form])
 
   return (
-    <>
+   
       <div className="min-h-screen pt-10 px-4 flex items-center justify-center">
         {/* go back home */}
         <motion.div
@@ -118,7 +120,14 @@ export default function SignIn() {
           </Link>
         </motion.div>
         {/* main */}
-        <motion.div
+        {isRedirecting ? (
+          <div className="flex min-h-screen items-center justify-center">
+            <div className="text-center">
+              <LoadingSpinner text={'Redirecting to your dashboard...'}/>
+            </div>
+          </div>
+        ) :
+        (<motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -214,8 +223,8 @@ export default function SignIn() {
               </p>
             </div>
           </div>
-        </motion.div>
-      </div>
-    </>
+        </motion.div>)
+      }
+    </div>
   )
 }

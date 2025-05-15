@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Loader2, ShieldCheck } from "lucide-react"
 
-export default function CallbackLoading() {
+export default function Loading() {
   const [progress, setProgress] = useState(0)
   const [message, setMessage] = useState("Verifying your authentication...")
 

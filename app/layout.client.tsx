@@ -34,7 +34,7 @@ export default function RootLayoutClient({
           async
           defer
           src="https://cloud.umami.is/script.js"
-          // data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
+          data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
           />
           {/* SEO */}
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />

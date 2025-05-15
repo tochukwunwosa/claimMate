@@ -31,6 +31,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
 
   handleReset = () => {
     this.setState({ hasError: false });
+    // window.refresh()
   };
 
   render() {

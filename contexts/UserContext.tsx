@@ -7,6 +7,7 @@ import { AuthError, User } from "@supabase/supabase-js";
 // Create the user context
 interface UserContextType {
   user: User | null;
+  userName: string
   loading: boolean;
   error: AuthError | null;
   isAuthenticated: boolean;
@@ -90,12 +91,15 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     fetchUser();
   }, []);
 
+  const userName = profile?.full_name.split(" ")[0] || 'User'
+
   const value = {
     user,
     loading,
     error,
     isAuthenticated: !!user,
     profile,
+    userName
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
