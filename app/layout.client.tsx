@@ -13,14 +13,9 @@ import { jsonLd } from '@/lib/jsonld';
 import { UserProvider } from '@/contexts/UserContext'
 import { Toaster } from 'sonner';
 import { generateMeta } from "@/lib/metadata";
+import { Metadata } from 'next';
 
-export const metadata = generateMeta({
-  title: "ClaimMate – AI-Powered Insurance Claim Drafting",
-  description:
-    "ClaimMate helps insurance professionals draft faster, more accurate claims with AI. Save time, ensure compliance, and reduce errors.",
-  path: "/",
-  image: "/images/claimmate-dashboard.png"
-});
+export const metadata: Metadata = generateMeta({})
 
 const inter = Inter({ subsets: ['latin'] });
 

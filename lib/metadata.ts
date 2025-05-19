@@ -2,7 +2,7 @@ const siteUrl = "https://claimmate.vercel.app";
 const defaultTitle = "ClaimMate – AI-Powered Insurance Claim Drafting";
 const defaultDescription =
   "ClaimMate helps insurance professionals draft faster, more accurate claims with AI. Save time, ensure compliance, and reduce errors.";
-  const defaultOgImage = `${siteUrl}/og-image.png`;
+const defaultOgImage = `${siteUrl}/images/claimmate-dashboard.png`;
 
 export function generateMeta({
   title = defaultTitle,
@@ -23,7 +23,6 @@ export function generateMeta({
       ? image
       : `${siteUrl}${image}`
     : defaultOgImage;
-
 
   return {
     title,
@@ -84,12 +83,11 @@ export function generateMeta({
   };
 }
 
-// useage in each page.tsx file:
-// import { generateMeta } from "@/lib/metadata";
 
 // export const metadata = generateMeta({
-//   title: "About – ClaimMate",
+//   title: "Features – ClaimMate",
 //   description:
-//     "Learn more about ClaimMate and our mission to simplify insurance claim drafting.",
-//   path: "/about-us",
+//     "Explore ClaimMate's powerful features for insurance professionals.",
+//   path: "/features",
+//   image: "/feature-og-image.png",
 // });
