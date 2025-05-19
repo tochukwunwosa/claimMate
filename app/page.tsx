@@ -4,11 +4,6 @@ import { WaitlistForm } from "@/components/waitlist-form"
 import { FeaturesSection } from "@/components/features-section"
 import { motion } from "framer-motion"
 import Image from 'next/image'
-import { generateMeta } from "@/lib/metadata"
-
-export const metadata = generateMeta({
-  path: "/",
-})
 
 export default function Home() {
   const container = {

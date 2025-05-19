@@ -12,10 +12,11 @@ import { usePathname } from 'next/navigation';
 import { jsonLd } from '@/lib/jsonld';
 import { UserProvider } from '@/contexts/UserContext'
 import { Toaster } from 'sonner';
-import { generateMeta } from "@/lib/metadata";
-import { Metadata } from 'next';
+import { generateMeta } from "@/lib/metadata"
 
-export const metadata: Metadata = generateMeta({})
+export const metadata = generateMeta({
+  path: "/",
+})
 
 const inter = Inter({ subsets: ['latin'] });
 

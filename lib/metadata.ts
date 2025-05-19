@@ -1,54 +1,34 @@
+import { Metadata } from "next";
+
 const siteUrl = "https://claimmate.vercel.app";
 const defaultTitle = "ClaimMate – AI-Powered Insurance Claim Drafting";
 const defaultDescription =
   "ClaimMate helps insurance professionals draft faster, more accurate claims with AI. Save time, ensure compliance, and reduce errors.";
 const defaultOgImage = `${siteUrl}/images/claimmate-dashboard.png`;
 
-export function generateMeta({
-  title = defaultTitle,
-  description = defaultDescription,
-  path = "/",
-  image,
-}: {
+type PageMetadataProps = {
   title?: string;
   description?: string;
   path?: string;
   image?: string;
-}) {
-  const url = `${siteUrl}${path}`;
-  const canonicalUrl = url;
+};
 
-  const resolvedImage = image
-    ? image.startsWith("http")
-      ? image
-      : `${siteUrl}${image}`
-    : defaultOgImage;
-
-  // Ensure the full absolute URL is used for the OG image
-  const absoluteImageUrl = resolvedImage.startsWith("http")
-    ? resolvedImage
-    : `${siteUrl}${resolvedImage.startsWith("/") ? "" : "/"}${resolvedImage}`;
+export function generateMeta({
+  title = defaultTitle,
+  description = defaultDescription,
+  path = "",
+  image,
+}: PageMetadataProps = {}): Metadata {
+  const baseTitle = "ClaimMate";
+  const fullTitle = title === baseTitle ? baseTitle : `${baseTitle} – ${title}`;
+  const fullUrl = `${siteUrl}${path}`;
+  const resolvedImage = image?.startsWith("http")
+    ? image
+    : `${siteUrl}${image || defaultOgImage}`;
 
   return {
-    title,
+    title: fullTitle,
     description,
-    other: {
-      "google-site-verification": "google020903c422c1dbcd",
-      canonical: canonicalUrl,
-      "og:image": absoluteImageUrl,
-      "og:image:width": "1200",
-      "og:image:height": "630",
-      "og:image:alt": "ClaimMate Preview",
-      "og:url": url,
-      "og:type": "website",
-      "og:title": title,
-      "og:description": description,
-      "og:site_name": "ClaimMate",
-      "twitter:card": "summary_large_image",
-      "twitter:image": absoluteImageUrl,
-      "twitter:title": title,
-      "twitter:description": description,
-    },
     keywords: [
       "ClaimMate",
       "insurance claims software",
@@ -76,35 +56,58 @@ export function generateMeta({
       "insurance technology platform",
       "AI tools for insurance professionals",
     ],
+    authors: [{ name: "Tochukwu Nwosa" }],
     openGraph: {
-      title,
+      title: fullTitle,
       description,
-      url,
-      siteName: "ClaimMate",
+      url: fullUrl,
+      siteName: baseTitle,
       images: [
         {
           url: resolvedImage,
+          secureUrl: resolvedImage,
           width: 1200,
           height: 630,
-          alt: "ClaimMate Preview",
+          alt: "ClaimMate - AI powered drafting software",
         },
       ],
+      locale: "en_US",
       type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: fullTitle,
       description,
       images: [resolvedImage],
     },
-    metadataBase: new URL(siteUrl),
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+    icons: {
+      icon: "/favicon.ico",
+    },
+    alternates: {
+      canonical: fullUrl,
+    },
   };
 }
 
+
+// use in page.tsx
+
+// import { generateMeta } from '@/lib/metadata';
+
 // export const metadata = generateMeta({
-//   title: "Features – ClaimMate",
-//   description:
-//     "Explore ClaimMate's powerful features for insurance professionals.",
+//   title: "Features",
+//   description: "Explore ClaimMate's powerful features for insurance professionals.",
 //   path: "/features",
-//   image: "/feature-og-image.png",
+//   image: "/images/feature-og-image.png", // optional
 // });
