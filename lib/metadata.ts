@@ -2,13 +2,13 @@ const siteUrl = "https://claimmate.vercel.app";
 const defaultTitle = "ClaimMate – AI-Powered Insurance Claim Drafting";
 const defaultDescription =
   "ClaimMate helps insurance professionals draft faster, more accurate claims with AI. Save time, ensure compliance, and reduce errors.";
-const ogImage = `${siteUrl}/og-image.png`;
+  const defaultOgImage = `${siteUrl}/og-image.png`;
 
 export function generateMeta({
   title = defaultTitle,
   description = defaultDescription,
   path = "/",
-  image = ogImage,
+  image,
 }: {
   title?: string;
   description?: string;
@@ -16,7 +16,14 @@ export function generateMeta({
   image?: string;
 }) {
   const url = `${siteUrl}${path}`;
-  const canonicalUrl = url; // Canonical URL is generally the full page URL
+  const canonicalUrl = url;
+
+  const resolvedImage = image
+    ? image.startsWith("http")
+      ? image
+      : `${siteUrl}${image}`
+    : defaultOgImage;
+
 
   return {
     title,
@@ -59,7 +66,7 @@ export function generateMeta({
       siteName: "ClaimMate",
       images: [
         {
-          url: image,
+          url: resolvedImage,
           width: 1200,
           height: 630,
           alt: "ClaimMate Preview",
@@ -71,7 +78,7 @@ export function generateMeta({
       card: "summary_large_image",
       title,
       description,
-      images: [image],
+      images: [resolvedImage],
     },
     metadataBase: new URL(siteUrl),
   };
