@@ -11,10 +11,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {useUser} from '@/contexts/UserContext'
+import { useUser } from '@/contexts/UserContext'
+import LogOutBtn from '@/components/auth/log-out-btn'
 
 export function SiteHeader() {
-  const {userName} = useUser()
+  const { userName } = useUser()
   return (
     <header className="sticky top-0 z-40 border-b bg-background">
       <div className="container flex h-16 items-center justify-between px-4">
@@ -50,7 +51,11 @@ export function SiteHeader() {
               <DropdownMenuItem>Profile</DropdownMenuItem>
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Sign out</DropdownMenuItem>
+              <DropdownMenuItem className="hover:!bg-transparent transition-colors">
+                <div onClick={(e) => e.stopPropagation()}>
+                  <LogOutBtn text="Log out" icon={true} />
+                </div>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

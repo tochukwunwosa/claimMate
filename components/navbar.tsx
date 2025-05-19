@@ -58,16 +58,15 @@ export function Navbar() {
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center">
-          <div className="relative size-10 overflow-hidden flex items-center">
-            <Image 
-              src="/logos/ClaimMate-logo-icon-removebg.png" 
-              alt="ClaimMate Logo." 
-            width={80}
-            height={80}
-              priority 
-            />
+        <Link href="/" className={("h-12 flex items-center gap-2 px-2")}>
+          <div className="size-8 flex items-center">
+            <Image src={'/logos/claimmate-logo-sm.png'} width={76} height={76} alt="ClaimMate logo" className='size-8'/>
           </div>
+          
+            <div className="w-24 flex items-center"> 
+              <Image src={'/logos/claimmate-logo-text.png'} width={250} height={44} alt="ClaimMate logo" className='w-full' />
+            </div>
+          
         </Link>
 
         {/* Desktop Navigation */}

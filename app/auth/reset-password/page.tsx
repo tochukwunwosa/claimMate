@@ -68,16 +68,16 @@ export default function ResetPassword() {
 
   // reset password handler
   const onSubmit = useCallback(async (values: z.infer<typeof formSchema>) => {
-  setServerError(null)
+    setServerError(null)
 
-  const result = await resetPassword(values.password)
+    const result = await resetPassword(values.password)
 
-  if (result?.error) {
-    setServerError(result.error)
-  } else {
-    setSuccess(true)
-  }
-}, [])
+    if (result?.error) {
+      setServerError(result.error)
+    } else {
+      setSuccess(true)
+    }
+  }, [])
 
 
   return (

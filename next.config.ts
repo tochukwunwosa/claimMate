@@ -58,13 +58,13 @@ const nextConfig: NextConfig = {
   },
 };
 
-const experimentalConfig = {
-  experimental: {
-    serverActions: {
-      bodySizeLimit: "2mb",
-    },
-  },
-};
+// const experimentalConfig = {
+//   experimental: {
+//     serverActions: {
+//       bodySizeLimit: "2mb",
+//     },
+//   },
+// };
 
 // Validate required environment variables
 const requiredEnvVars = [
@@ -87,4 +87,4 @@ requiredEnvVars.forEach((key) => {
   }
 });
 
-export default { ...nextConfig, ...experimentalConfig };
+export default { ...nextConfig };

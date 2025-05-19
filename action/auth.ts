@@ -88,7 +88,6 @@ export const confirmEmail = async (email: string) => {
 };
 
 
-
 // register user
 export async function registerUser(email: string, password: string) {
   const supabase = await createClient();
@@ -99,6 +98,7 @@ export async function registerUser(email: string, password: string) {
       emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/confirm`,
     },
   });
+
 
   if (error) {
     console.log('error: ', error)
@@ -149,3 +149,4 @@ export async function resetPassword(newPassword: string) {
 
   return { success: true };
 }
+

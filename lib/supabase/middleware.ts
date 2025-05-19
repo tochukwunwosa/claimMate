@@ -41,29 +41,29 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // If the user is not authenticated and trying to access the dashboard
+  // If the user is not authenticated and trying to access the dashboard redirect to login page
   if (!user && pathname.startsWith("/dashboard")) {
     const url = request.nextUrl.clone();
-    url.pathname = "/auth/login"; // Redirect to login page
+    url.pathname = "/auth/login";
     return NextResponse.redirect(url);
   }
 
-  // If the user is not authenticated and trying to access any other page
-  if (
-    !user &&
-    pathname !== "/auth/login" &&
-    pathname !== "/auth" &&
-    pathname !== "/"
-  ) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/"; // Redirect to homepage
-    return NextResponse.redirect(url);
-  }
+  // If the user is not authenticated and trying to access any other page redirect to homepage
+  // if (
+  //   !user &&
+  //   pathname !== "/auth/login" &&
+  //   pathname !== "/auth" &&
+  //   pathname !== "/"
+  // ) {
+  //   const url = request.nextUrl.clone();
+  //   url.pathname = "/";
+  //   return NextResponse.redirect(url);
+  // }
 
-  // If the user is authenticated and trying to access /auth or /login, redirect them to homepage
-  if (user && (pathname.startsWith("/auth") || pathname.startsWith("/login"))) {
+  // If the user is authenticated and trying to access /auth or /login or /, redirect them to homepage
+  if (user && (pathname.startsWith("/auth") || pathname.startsWith("/login") )) {
     const url = request.nextUrl.clone();
-    url.pathname = "/"; // Redirect to homepage
+    url.pathname = "/dashboard"; 
     return NextResponse.redirect(url);
   }
   

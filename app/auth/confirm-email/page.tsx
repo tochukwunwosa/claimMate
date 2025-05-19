@@ -13,6 +13,8 @@ import LoadingSpinner from '@/components/ui/loading-spinner'
 import { confirmEmail } from '@/action/auth'
 import { z } from "zod"
 import { AlertCircle } from "lucide-react"
+import { toast } from "sonner"
+
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -42,11 +44,14 @@ export default function ConfirmEmail() {
 
     if (result?.error) {
       setError(result.error)
+      toast.error(result.error)
     } else if (result?.message) {
       setMessage(result.message)
+      toast.success(result.message || "Verification email resent successfully.")
     }
   }, [])
-  
+
+
   return (
     <>
       <div className="min-h-screen pt-10 px-4 flex items-center justify-center">

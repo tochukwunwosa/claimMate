@@ -38,7 +38,7 @@ export default function Home() {
   return (
     <main className="scroll-smooth min-h-screen flex flex-col">
       {/* Hero Section */}
-      <section id='about' className="flex items-center justify-between gap-12 px-4 py-24 max-w-6xl mx-auto">
+      <section id='about' className="flex items-center justify-between gap-12 px-4 py-24 container mx-auto">
         {/* Text Content */}
         <motion.div
           variants={container}
@@ -94,7 +94,80 @@ export default function Home() {
         </motion.div>
       </section>
 
+      {/* Dashboard Mockup Section */}
+      <section className="py-16 px-4 bg-gradient-to-b from-background to-muted">
+        <div className="container mx-auto">
+          <motion.h2
+            className="text-2xl md:text-3xl font-bold text-center mb-12 text-primary"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            Powerful Dashboard for Insurance Professionals
+          </motion.h2>
 
+          <div className="relative max-w-5xl mx-auto">
+            {/* Decorative elements */}
+            <motion.div
+              className="absolute -z-10 w-full h-full rounded-full blur-3xl opacity-20 bg-secondary"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 0.2 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            />
+
+            {/* Laptop frame */}
+            <motion.div
+              className="relative bg-zinc-800 rounded-t-xl pt-4 pb-6 px-4 shadow-2xl"
+              initial={{ y: 100, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
+            >
+              {/* Laptop top bar with camera */}
+              <div className="flex justify-center items-center mb-2">
+                <div className="w-2 h-2 rounded-full bg-zinc-600"></div>
+              </div>
+
+              {/* Screen with dashboard image */}
+              <div className="bg-background rounded-lg overflow-hidden shadow-inner border border-zinc-700">
+                <motion.div
+                  initial={{ scale: 1.05, opacity: 0.8 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                >
+                  <Image
+                    src="/images/claimmate-dashboard.png"
+                    width={1134}
+                    height={633}
+                    alt="ClaimMate dashboard interface"
+                    className="w-full h-auto"
+                    priority
+                  />
+                </motion.div>
+              </div>
+            </motion.div>
+
+            {/* Laptop base */}
+            <motion.div
+              className="bg-zinc-700 h-4 max-w-[90%] mx-auto rounded-b-lg shadow-2xl"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.3, delay: 0.6 }}
+            />
+            <motion.div
+              className="bg-zinc-800 h-1 max-w-[40%] mx-auto rounded-b-lg shadow-2xl"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.3, delay: 0.7 }}
+            />
+          </div>
+        </div>
+      </section>
 
 
       {/* Waitlist Form Section */}

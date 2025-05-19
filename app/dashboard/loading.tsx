@@ -23,9 +23,9 @@ const quoteSets: [string[], string[], string[]] = [
   ],
 ]
 
-export default function Loading() {
-  const [progress, setProgress] = useState<number>(0)
-  const [message, setMessage] = useState<string>("")
+export default function DashboardLoader() {
+  // const [progress, setProgress] = useState<number>(0)
+  const [message, setMessage] = useState("")
 
   useEffect(() => {
     // Pick a random set and a random quote from that set
@@ -34,26 +34,26 @@ export default function Loading() {
     setMessage(randomQuote)
 
     // Progress simulation
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval)
-          return 100
-        }
-        return prev + 5
-      })
-    }, 100)
+    // const interval = setInterval(() => {
+    //   setProgress((prev) => {
+    //     if (prev >= 100) {
+    //       clearInterval(interval)
+    //       return 100
+    //     }
+    //     return prev + 5
+    //   })
+    // }, 100)
 
-    return () => clearInterval(interval)
+    // return () => clearInterval(interval)
   }, [])
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F4F4F4] px-4">
+    <div className="min-h-screen flex items-center justify-center  px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="bg-white p-8 rounded-lg shadow-sm max-w-md w-full"
+        className=" p-8 rounded-lg shadow-sm max-w-md w-full"
       >
         <div className="flex flex-col items-center text-center">
           <motion.div
@@ -80,13 +80,13 @@ export default function Loading() {
           </div>
 
           {/* Progress Bar */}
-          <div className="w-full h-2 bg-[#F4F4F4] rounded-full mb-6 overflow-hidden">
+          {/* <div className="w-full h-2 bg-[#F4F4F4] rounded-full mb-6 overflow-hidden">
             <motion.div
               initial={{ width: "0%" }}
               animate={{ width: `${progress}%` }}
               className="h-full bg-[#9CCA46]"
             />
-          </div>
+          </div> */}
 
          
         </div>

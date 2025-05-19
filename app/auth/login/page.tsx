@@ -16,6 +16,9 @@ import LoadingSpinner from '@/components/ui/loading-spinner'
 import { cn } from "@/lib/utils"
 import { loginUser, resetPasswordEmail } from '@/action/auth'
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import DashboardLoader from "@/app/dashboard/loading"
+import { toast } from "sonner"
+
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -39,7 +42,7 @@ export default function SignIn() {
     },
     mode: "onChange",
   })
-  
+
 
   // Once storedEmail is available, update the form
   useEffect(() => {
@@ -54,23 +57,26 @@ export default function SignIn() {
 
   const onSubmit = useCallback(async (values: FormSchemaType) => {
     setError(null)
-  
+
     const result = await loginUser(values.email, values.password)
-  
+
     if (result?.error) {
       setError(result.error)
       return
     }
-  
-    if (result.onboarded) {
-      setIsRedirecting(true) 
-      router.push('/dashboard')
-    } else {
+
+    toast.success('Login successful')
+
+    if (!result.onboarded) {
+      toast.info("You're almost there! Please complete your onboarding.")
       router.push('/onboarding')
+    } else {
+      setIsRedirecting(true)
+      router.push('/dashboard')
     }
-  
+
     removeStoredEmail()
-  }, [router, removeStoredEmail])  
+  }, [router, removeStoredEmail])
 
   // reset password handler
   const handleresetPasswordEmail = useCallback(async () => {
@@ -89,44 +95,44 @@ export default function SignIn() {
   }, [form])
 
   return (
-   
-      <div className="min-h-screen pt-10 px-4 flex items-center justify-center">
-        {/* go back home */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-          className="absolute top-6 left-6"
+
+    <div className="min-h-screen pt-10 px-4 flex items-center justify-center">
+      {/* go back home */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.2 }}
+        className="absolute top-6 left-6"
+      >
+        <Link
+          href="/"
+          className="flex items-center space-x-2 text-primary hover:text-accent transition-all duration-200"
+          aria-label="Go back home"
         >
-          <Link
-            href="/"
-            className="flex items-center space-x-2 text-primary hover:text-accent transition-all duration-200"
-            aria-label="Go back home"
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            aria-hidden="true"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a1 1 0 01-.707-.293l-7-7a1 1 0 010-1.414l7-7A1 1 0 0111.414 3.707L5.828 9.293H18a1 1 0 110 2H5.828l5.586 5.586A1 1 0 0110 18z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span className="font-medium">Home</span>
-          </Link>
-        </motion.div>
-        {/* main */}
-        {isRedirecting ? (
-          <div className="flex min-h-screen items-center justify-center">
-            <div className="text-center">
-              <LoadingSpinner text={'Redirecting to your dashboard...'}/>
-            </div>
+            <path
+              fillRule="evenodd"
+              d="M10 18a1 1 0 01-.707-.293l-7-7a1 1 0 010-1.414l7-7A1 1 0 0111.414 3.707L5.828 9.293H18a1 1 0 110 2H5.828l5.586 5.586A1 1 0 0110 18z"
+              clipRule="evenodd"
+            />
+          </svg>
+          <span className="font-medium">Home</span>
+        </Link>
+      </motion.div>
+      {/* main */}
+      {isRedirecting ? (
+        <div className="flex min-h-screen items-center justify-center">
+          <div className="text-center">
+            <DashboardLoader />
           </div>
-        ) :
+        </div>
+      ) :
         (<motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

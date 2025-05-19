@@ -7,7 +7,7 @@ const ogImage = `${siteUrl}/og-image.png`;
 export function generateMeta({
   title = defaultTitle,
   description = defaultDescription,
-  path = "",
+  path = "/",
   image = ogImage,
 }: {
   title?: string;

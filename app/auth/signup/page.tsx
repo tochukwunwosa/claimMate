@@ -15,6 +15,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { registerUser } from "@/action/auth"
+import { toast } from "sonner"
+
 
 const formSchema = z
   .object({
@@ -32,7 +34,7 @@ export default function SignUp() {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
-  const [ , setStoredEmail ] = useLocalStorage<string>("user-email", '')
+  const [, setStoredEmail] = useLocalStorage<string>("user-email", '')
   const [redirectTime, setRedirectTime] = useState(5)
   const [shouldRedirect, setShouldRedirect] = useState(false)
 
@@ -53,46 +55,53 @@ export default function SignUp() {
   }, [])
 
   useEffect(() => {
-  if (!shouldRedirect) return
+    if (!shouldRedirect) return
 
-  const timer = setInterval(() => {
-    setRedirectTime((prev) => {
-      if (prev === 1) {
-        clearInterval(timer)
-        return 0
-      }
-      return prev - 1
-    })
-  }, 1000)
+    const timer = setInterval(() => {
+      setRedirectTime((prev) => {
+        if (prev === 1) {
+          clearInterval(timer)
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
 
-  return () => clearInterval(timer)
+    return () => clearInterval(timer)
   }, [shouldRedirect, router])
-  
+
   // Separate effect for handling the navigation
   if (redirectTime === 0) {
     router.push("/auth/login")
   }
 
   //signup handler
- const onSubmit = useCallback(async (values: FormSchemaType) => {
-  setServerError(null)
+  const onSubmit = useCallback(async (values: FormSchemaType) => {
+    setServerError(null)
 
-  const result = await registerUser(values.email, values.password)
+    const result = await registerUser(values.email, values.password)
 
     if (result?.error) {
-      if (result.error.toLowerCase().includes("user already registered") || result.error.toLowerCase().includes("email")) {
+      if (
+        result.error.toLowerCase().includes("user already registered") ||
+        result.error.toLowerCase().includes("email")
+      ) {
         setStoredEmail(values.email)
         setServerError("An account with this email already exists. Redirecting to login...")
+        toast.error("An account with this email already exists. Redirecting to login...")
         setShouldRedirect(true)
         return
       } else {
         setServerError(result.error)
+        toast.error(result.error)
         return
       }
     }
 
+    toast.success("Registration successful! Please check your email to verify your account.")
     router.push("/auth/verification?email=" + encodeURIComponent(values.email))
   }, [router, setStoredEmail])
+
 
 
   return (
@@ -214,10 +223,10 @@ export default function SignUp() {
                   aria-label='Submit'
                   className="cursor-pointer w-full bg-secondary text-primary hover:bg-accent font-semibold disabled:cursor-not-allowed"
                   disabled={form.formState.isSubmitting || !form.formState.isValid}
-                  
+
                 >
-                  {form.formState.isSubmitting ? 
-                    <div className='flex items-center gap-2'>Creating account... <LoadingSpinner size={14} /></div>  : "Sign up"}
+                  {form.formState.isSubmitting ?
+                    <div className='flex items-center gap-2'>Creating account... <LoadingSpinner size={14} /></div> : "Sign up"}
                 </Button>
               </form>
             </Form>

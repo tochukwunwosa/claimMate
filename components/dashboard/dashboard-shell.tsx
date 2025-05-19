@@ -9,7 +9,7 @@ interface DashboardShellProps {
 
 export function DashboardShell({ children }: DashboardShellProps) {
   const { state } = useSidebar()
-  const marginClass = state === "collapsed" ? "ml-[4rem]" : "ml-[12rem]"
+  const marginClass = state === "collapsed" ? "ml-[4.5rem]" : "ml-[12.2rem]"
 
   return (
       <div className="flex min-h-screen flex-1">

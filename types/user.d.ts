@@ -1,5 +1,6 @@
 declare interface UserProfile {
   id: string; 
+  avatar?: string;
   email: string;
   full_name: string;
   role: string;

@@ -11,6 +11,16 @@ import { Inter } from 'next/font/google';
 import { usePathname } from 'next/navigation';
 import { jsonLd } from '@/lib/jsonld';
 import { UserProvider } from '@/contexts/UserContext'
+import { Toaster } from 'sonner';
+import { generateMeta } from "@/lib/metadata";
+
+export const metadata = generateMeta({
+  title: "ClaimMate – AI-Powered Insurance Claim Drafting",
+  description:
+    "ClaimMate helps insurance professionals draft faster, more accurate claims with AI. Save time, ensure compliance, and reduce errors.",
+  path: "/",
+  image: "/images/claimmate-dashboard.png"
+});
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -47,6 +57,8 @@ export default function RootLayoutClient({
           {!hideHeaderFooter && <Navbar />}
           <AnimatePresence>
             <UserProvider>
+
+              <Toaster richColors={true}/>
             {children}
             </UserProvider>
           </AnimatePresence>
