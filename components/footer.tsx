@@ -14,13 +14,13 @@ export function Footer() {
 
   return (
     <motion.footer
-      className="bg-[#F4F4F4] pb-12 pt-20 px-4"
+      className="bg-[#F4F4F4] pb-12 pt-20"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
     >
-      <div className="container mx-auto">
+      <div className="container mx-auto px-4 lg:px-0 ">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <motion.div
             initial={{ opacity: 0, x: -20 }}

@@ -56,7 +56,7 @@ export function Navbar() {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-white shadow-md py-2" : "bg-transparent py-4"
         }`}
     >
-      <div className="container mx-auto px-4 flex items-center justify-between">
+      <div className="container mx-auto px-4 lg:px-0 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className={("h-12 flex items-center gap-2 px-2")}>
           <div className="size-8 flex items-center">
@@ -94,7 +94,7 @@ export function Navbar() {
             </Link>
           </div> */}
           <Link href="#waitlist" onClick={() => setIsOpen(false)} className="block w-full">
-            <Button className="cursor-pointer w-full bg-secondary text-primary hover:bg-accent font-semibold transition-colors">
+            <Button className="w-full bg-secondary text-primary hover:bg-accent font-semibold transition-colors">
               Join the Waitlist
             </Button>
           </Link>
@@ -149,7 +149,7 @@ export function Navbar() {
                 {/* Keep the commented out waitlist button */}
                 <li className="pt-2 ">
                   <Link href="#waitlist" onClick={() => setIsOpen(false)} className="block w-full">
-                    <Button className="cursor-pointer w-full bg-secondary text-primary hover:bg-accent font-semibold transition-colors">
+                    <Button className="w-full bg-secondary text-primary hover:bg-accent font-semibold transition-colors">
                       Join the Waitlist
                     </Button>
                   </Link>

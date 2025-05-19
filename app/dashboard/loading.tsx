@@ -1,10 +1,10 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
-import { Loader2, ShieldCheck } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { Loader2 } from "lucide-react"
+import AnimatedDots from '@/components/ui/animated-dots'
 
-// Define quote sets as a tuple of string arrays for strong typing
 const quoteSets: [string[], string[], string[]] = [
   [
     "“The best time to prepare for a claim is before you need one.”",
@@ -12,8 +12,8 @@ const quoteSets: [string[], string[], string[]] = [
     "“Behind every claim is someone’s stress. Let’s ease it.”",
   ],
   [
-    "“Relax. We won’t make you fax anything.” 📠",
-    "“Claim writing that doesn’t make you want to cry.” 😅",
+    "“Relax. We won’t make you fax anything.”",
+    "“Claim writing that doesn’t make you want to cry.”",
     "“No more toggling 10 tabs just to write one claim.”",
   ],
   [
@@ -24,71 +24,47 @@ const quoteSets: [string[], string[], string[]] = [
 ]
 
 export default function DashboardLoader() {
-  // const [progress, setProgress] = useState<number>(0)
   const [message, setMessage] = useState("")
+  const [showMessage, setShowMessage] = useState(false)
 
   useEffect(() => {
-    // Pick a random set and a random quote from that set
     const randomSet = quoteSets[Math.floor(Math.random() * quoteSets.length)]
     const randomQuote = randomSet[Math.floor(Math.random() * randomSet.length)]
     setMessage(randomQuote)
+  }, [])
 
-    // Progress simulation
-    // const interval = setInterval(() => {
-    //   setProgress((prev) => {
-    //     if (prev >= 100) {
-    //       clearInterval(interval)
-    //       return 100
-    //     }
-    //     return prev + 5
-    //   })
-    // }, 100)
+  useEffect(() => {
+    const delayMessage = setTimeout(() => {
+      setShowMessage(true)
+    }, 10000) // 10 seconds delay before showing the message
 
-    // return () => clearInterval(interval)
+    return () => clearTimeout(delayMessage)
   }, [])
 
   return (
-    <div className="min-h-screen flex items-center justify-center  px-4">
+    <div className="min-h-screen flex items-center justify-center px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className=" p-8 rounded-lg shadow-sm max-w-md w-full"
+        className="p-8 max-w-md w-full"
       >
         <div className="flex flex-col items-center text-center">
-          <motion.div
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="w-20 h-20 bg-[#F4F4F4] rounded-full flex items-center justify-center mb-6"
-          >
-            <motion.div
-              animate={{ scale: [1, 1.1, 1], opacity: [0.8, 1, 0.8] }}
-              transition={{
-                duration: 2,
-                repeat: Number.POSITIVE_INFINITY,
-                repeatType: "reverse",
-              }}
-            >
-              <ShieldCheck className="h-10 w-10 text-[#203F30]" />
-            </motion.div>
-          </motion.div>
+          <div className="w-full flex flex-col items-center justify-center mb-4">
 
-          <div className="flex flex-col items-center justify-center mb-4">
-            <Loader2 className="size-4 text-[#203F30] animate-spin mr-2" />           
-            <p className="text-[#1A1A1A] mb-6">{message}</p>
+            <Loader2 className="size-4 text-[#203F30] animate-spin mr-2" />
+            <AnimatePresence>
+              <motion.p
+                className="text-[#1A1A1A] mb-6"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.6 }}
+              >
+                {showMessage ?  message :  <AnimatedDots text={'Loading dashboard'}/>}
+              </motion.p>             
+            </AnimatePresence>
           </div>
-
-          {/* Progress Bar */}
-          {/* <div className="w-full h-2 bg-[#F4F4F4] rounded-full mb-6 overflow-hidden">
-            <motion.div
-              initial={{ width: "0%" }}
-              animate={{ width: `${progress}%` }}
-              className="h-full bg-[#9CCA46]"
-            />
-          </div> */}
-
-         
         </div>
       </motion.div>
     </div>

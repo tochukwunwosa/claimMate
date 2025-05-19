@@ -85,10 +85,10 @@ export default function Home() {
           transition={{ duration: 0.6 }}
         >
           <Image
-            src="/claimmate-preview.png"
+            src="/images/claimmate-hero.png"
             width={1024}
             height={1024}
-            alt="ClaimMate preview"
+            alt="ClaimMate Image"
             className="mx-auto"
           />
         </motion.div>
