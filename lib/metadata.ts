@@ -22,9 +22,12 @@ export function generateMeta({
   const baseTitle = "ClaimMate";
   const fullTitle = title === baseTitle ? baseTitle : `${baseTitle} – ${title}`;
   const fullUrl = `${siteUrl}${path}`;
-  const resolvedImage = image?.startsWith("http")
-    ? image
-    : `${siteUrl}${image || defaultOgImage}`;
+  const resolvedImage = image
+    ? image.startsWith("http")
+      ? image
+      : `${siteUrl}${image}`
+    : defaultOgImage;
+
 
   return {
     title: fullTitle,
