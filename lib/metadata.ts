@@ -57,7 +57,6 @@ export function generateMeta({
       "AI tools for insurance professionals",
     ],
     authors: [{ name: "Tochukwu Nwosa" }],
-    metadataBase: new URL("https://claimmate.vercel.app"),
     openGraph: {
       title: fullTitle,
       description,
