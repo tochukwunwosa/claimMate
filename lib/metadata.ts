@@ -24,12 +24,30 @@ export function generateMeta({
       : `${siteUrl}${image}`
     : defaultOgImage;
 
+  // Ensure the full absolute URL is used for the OG image
+  const absoluteImageUrl = resolvedImage.startsWith("http")
+    ? resolvedImage
+    : `${siteUrl}${resolvedImage.startsWith("/") ? "" : "/"}${resolvedImage}`;
+
   return {
     title,
     description,
     other: {
       "google-site-verification": "google020903c422c1dbcd",
       canonical: canonicalUrl,
+      "og:image": absoluteImageUrl,
+      "og:image:width": "1200",
+      "og:image:height": "630",
+      "og:image:alt": "ClaimMate Preview",
+      "og:url": url,
+      "og:type": "website",
+      "og:title": title,
+      "og:description": description,
+      "og:site_name": "ClaimMate",
+      "twitter:card": "summary_large_image",
+      "twitter:image": absoluteImageUrl,
+      "twitter:title": title,
+      "twitter:description": description,
     },
     keywords: [
       "ClaimMate",
@@ -82,7 +100,6 @@ export function generateMeta({
     metadataBase: new URL(siteUrl),
   };
 }
-
 
 // export const metadata = generateMeta({
 //   title: "Features – ClaimMate",
