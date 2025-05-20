@@ -19,8 +19,6 @@ export function generateMeta({
   path = "",
   image,
 }: PageMetadataProps = {}): Metadata {
-  const baseTitle = "ClaimMate";
-  const fullTitle = title === baseTitle ? baseTitle : `${baseTitle} – ${title}`;
   const fullUrl = `${siteUrl}${path}`;
   const resolvedImage = image
     ? image.startsWith("http")
@@ -30,7 +28,7 @@ export function generateMeta({
 
 
   return {
-    title: fullTitle,
+    title,
     description,
     keywords: [
       "ClaimMate",
@@ -61,10 +59,10 @@ export function generateMeta({
     ],
     authors: [{ name: "Tochukwu Nwosa" }],
     openGraph: {
-      title: fullTitle,
+      title,
       description,
       url: fullUrl,
-      siteName: baseTitle,
+      siteName: 'ClaimMate',
       images: [
         {
           url: resolvedImage,
@@ -79,9 +77,9 @@ export function generateMeta({
     },
     twitter: {
       card: "summary_large_image",
-      title: fullTitle,
+      title,
       description,
-      site: "@TochiObere",
+      site: "ClaimMate",
     creator: "@TochiObere",
       images: [resolvedImage],
     },
