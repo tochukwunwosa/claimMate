@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [new URL("https://res.cloudinary.com/**")],
+  },
   reactStrictMode: true,
   env: {
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -17,6 +20,8 @@ const nextConfig: NextConfig = {
       process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
     NEXT_PUBLIC_EMAILJS_PUBLIC_KEY: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
     NEXT_PUBLIC_UMAMI_WEBSITE_ID: process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID,
+    CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
+    NEXT_PUBLIC_CLOUDINARY_API_KEY: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
   },
   async headers() {
     return [
@@ -79,6 +84,8 @@ const requiredEnvVars = [
   "NEXT_PUBLIC_EMAILJS_TEMPLATE_ID",
   "NEXT_PUBLIC_EMAILJS_PUBLIC_KEY",
   "NEXT_PUBLIC_UMAMI_WEBSITE_ID",
+  "CLOUDINARY_API_SECRET",
+  "NEXT_PUBLIC_CLOUDINARY_API_KEY",
 ];
 
 requiredEnvVars.forEach((key) => {

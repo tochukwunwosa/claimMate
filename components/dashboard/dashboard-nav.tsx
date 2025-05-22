@@ -23,14 +23,12 @@ const navItems = [
   },
   {
     title: "My Claims",
-    // href: "/dashboard/claims",
-    href: '#',
+    href: "/dashboard/claims",
     icon: FileText,
   },
   {
     title: "New Claim",
-    // href: "/dashboard/claims/new",
-    href: '#',
+    href: "/dashboard/claims/new",
     icon: PlusCircle,
   },
   {

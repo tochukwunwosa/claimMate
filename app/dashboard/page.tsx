@@ -8,10 +8,16 @@ import { NotificationCards } from "@/components/dashboard/notification-cards"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import { useUser } from "@/contexts/UserContext"
+import { useRouter } from "next/navigation"
 
 
 export default function DashboardPage() {
   const { userName } = useUser()
+  const router = useRouter()
+
+  const handleCreatClaim = () => {
+    router.push('/dashboard/claims/new')
+  }
 
   return (
     <DashboardShell>
@@ -20,7 +26,7 @@ export default function DashboardPage() {
           heading={`👋 Welcome back, ${userName || 'User'}!`}
           text="Here's a quick snapshot of your claim activity."
         />
-        <Button className="bg-emerald-500 hover:bg-emerald-600 text-white">
+        <Button onClick={handleCreatClaim} className="bg-emerald-500 hover:bg-emerald-600 text-white">
           <Plus className="mr-2 h-4 w-4" /> Create New Claim
         </Button>
       </div>

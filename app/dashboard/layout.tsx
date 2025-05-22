@@ -15,7 +15,7 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className='w-full'>
+      <div className='w-full '>
       {children}
       </div>
     </SidebarProvider>

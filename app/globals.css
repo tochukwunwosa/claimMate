@@ -46,6 +46,10 @@
   html {
     @apply  overflow-x-hidden scroll-smooth;
   }
+  
+  .button {
+    @apply  cursor-pointer;
+  }
 }
 
 @layer utilities {
