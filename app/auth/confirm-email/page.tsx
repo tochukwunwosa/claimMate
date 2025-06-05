@@ -93,8 +93,8 @@ export default function ConfirmEmail() {
         >
           <div className="bg-white rounded-lg shadow-sm p-8">
             <div className="text-center mb-8">
-              <h1 className="text-2xl font-bold text-[#203F30]">Welcome back</h1>
-              <p className="text-[#1A1A1A] mt-2">Confirm your ClaimMate account</p>
+              <h1 className="text-2xl font-bold text-[primary]">Welcome back</h1>
+              <p className="text-foreground mt-2">Confirm your ClaimMate account</p>
             </div>
 
             {error && (

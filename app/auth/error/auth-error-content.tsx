@@ -190,53 +190,53 @@ export default function AuthErrorContent() {
   }, [searchParams])
 
   return (
-      <div className="min-h-screen pt-24 pb-16 px-4 flex items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="w-full max-w-md"
-        >
-          <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-            <motion.div
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className={`mx-auto w-20 h-20 ${errorDetails.iconBg} rounded-full flex items-center justify-center mb-6`}
+    <div className="min-h-screen pt-24 pb-16 px-4 flex items-center justify-center">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md"
+      >
+        <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+          <motion.div
+            initial={{ scale: 0.8 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className={`mx-auto w-20 h-20 ${errorDetails.iconBg} rounded-full flex items-center justify-center mb-6`}
+          >
+            {errorDetails.icon}
+          </motion.div>
+
+          <h1 className="text-2xl font-bold text-primary mb-3">{errorDetails.title}</h1>
+          <p className="text-foreground mb-8">{errorDetails.message}</p>
+
+          <div className="space-y-4">
+            <Button
+              onClick={() => router.push(errorDetails.primaryAction.href)}
+              className="w-full bg-primary text-white hover:bg-foreground"
             >
-              {errorDetails.icon}
-            </motion.div>
+              {errorDetails.primaryAction.label}
+            </Button>
 
-            <h1 className="text-2xl font-bold text-[#203F30] mb-3">{errorDetails.title}</h1>
-            <p className="text-[#1A1A1A] mb-8">{errorDetails.message}</p>
-
-            <div className="space-y-4">
+            {errorDetails.secondaryAction && (
               <Button
-                onClick={() => router.push(errorDetails.primaryAction.href)}
-                className="w-full bg-[#203F30] text-white hover:bg-[#1A1A1A]"
+                variant="outline"
+                onClick={() => router.push(errorDetails.secondaryAction!.href)}
+                className="w-full border-primary text-primary hover:bg-muted"
               >
-                {errorDetails.primaryAction.label}
+                {errorDetails.secondaryAction.label}
               </Button>
-
-              {errorDetails.secondaryAction && (
-                <Button
-                  variant="outline"
-                  onClick={() => router.push(errorDetails.secondaryAction!.href)}
-                  className="w-full border-[#203F30] text-[#203F30] hover:bg-[#F4F4F4]"
-                >
-                  {errorDetails.secondaryAction.label}
-                </Button>
-              )}
-            </div>
-
-            <p className="mt-8 text-sm text-gray-500">
-              Need assistance?{" "}
-              <Link href="mailto:support@claimmate.com" className="text-[#203F30] hover:underline">
-                Contact our support team
-              </Link>
-            </p>
+            )}
           </div>
-        </motion.div>
-      </div>
+
+          <p className="mt-8 text-sm text-gray-500">
+            Need assistance?{" "}
+            <Link href="mailto:support@claimmate.com" className="text-primary hover:underline">
+              Contact our support team
+            </Link>
+          </p>
+        </div>
+      </motion.div>
+    </div>
   )
 }

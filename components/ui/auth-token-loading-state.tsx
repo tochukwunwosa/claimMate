@@ -57,7 +57,7 @@ export function AuthTokenLoading({
   }, [message])
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F4F4F4] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-muted px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -69,7 +69,7 @@ export function AuthTokenLoading({
             initial={{ scale: 0.8 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="w-20 h-20 bg-[#F4F4F4] rounded-full flex items-center justify-center mb-6"
+            className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mb-6"
           >
             <motion.div
               animate={{
@@ -82,24 +82,24 @@ export function AuthTokenLoading({
                 repeatType: "reverse",
               }}
             >
-              <Key className="h-10 w-10 text-[#203F30]" />
+              <Key className="h-10 w-10 text-primary" />
             </motion.div>
           </motion.div>
 
-          <h2 className="text-2xl font-semibold text-[#203F30] mb-2">Secure Sign-in</h2>
-          <p className="text-[#1A1A1A] mb-6">{currentMessage}</p>
+          <h2 className="text-2xl font-semibold text-primary mb-2">Secure Sign-in</h2>
+          <p className="text-foreground mb-6">{currentMessage}</p>
 
           {/* Progress bar */}
-          <div className="w-full h-2 bg-[#F4F4F4] rounded-full mb-6 overflow-hidden">
-            <motion.div initial={{ width: "0%" }} animate={{ width: `${progress}%` }} className="h-full bg-[#9CCA46]" />
+          <div className="w-full h-2 bg-muted rounded-full mb-6 overflow-hidden">
+            <motion.div initial={{ width: "0%" }} animate={{ width: `${progress}%` }} className="h-full bg-accent" />
           </div>
 
           <div className="flex items-center justify-center mb-4">
-            <Loader2 className="h-5 w-5 text-[#203F30] animate-spin mr-2" />
-            <span className="text-sm text-[#666666]">Processing your authentication</span>
+            <Loader2 className="h-5 w-5 text-primary animate-spin mr-2" />
+            <span className="text-sm text-muted-foreground">Processing your authentication</span>
           </div>
 
-          <p className="text-xs text-[#666666] max-w-xs">
+          <p className="text-xs text-muted-foreground max-w-xs">
             {`We're securely verifying your access token and preparing your dashboard. You'll be redirected automatically.`}
           </p>
         </div>

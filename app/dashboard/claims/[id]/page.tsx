@@ -1,127 +1,149 @@
 "use client"
 
-import { useState, useEffect, use } from "react"
-import { useRouter } from "next/navigation"
-import { DashboardShell } from "@/components/dashboard/dashboard-shell"
-import { DashboardHeader } from "@/components/dashboard/dashboard-header"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState, useEffect } from "react"
+import { ClaimForm } from "@/components/claims/form/claim-form"
+import { generateNewClaimDraft } from "@/action/ai"
 import { toast } from "sonner"
-import { ArrowLeft, FileText, Pencil, Download, Eye } from "lucide-react"
-import { getStatusBadge, getClaimTypeLabel } from "@/lib/utils"
-import { getClaim } from '@/action/claim'
-import { useClaimNavigation } from "@/hooks/useClaimNaviation"
-import { ClaimInformation } from "@/components/claim/claim-information"
-import { PropertyDetails } from "@/components/claim/property-details"
-import { DamageNotes } from "@/components/claim/damage-notes"
-import { ClaimPhotos } from "@/components/claim/claim-photos"
+import { type ClaimFormData } from "@/lib/validations/claim"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { getClaim } from "@/action/claim"
+import { Edit, Eye } from "lucide-react"
 
+interface PageProps {
+  params: {
+    id: string
+  }
+}
 
-export default function ClaimDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+export default function ClaimPage({ params }: PageProps) {
+  const [formData, setFormData] = useState<Partial<ClaimFormData>>({})
+  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [currentDraft, setCurrentDraft] = useState<ClaimDraft | null>(null)
   const router = useRouter()
   const [claim, setClaim] = useState<Claim | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const { id: claimId } = use(params)
-  const { handleGenerateDraft, handleViewDraft } = useClaimNavigation()
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false)
 
-  
-  useEffect(() => {
-    async function fetchClaimData() {
+  const handleSubmit = async (data: ClaimFormData) => {
+    const promise = new Promise<{ id: string }>(async (resolve, reject) => {
       try {
-        setIsLoading(true)
-        const { claim } = await getClaim(claimId);
-        setClaim(claim)
-      } catch {
-        toast.error('Failed to load claim details')
-      } finally {
-        setIsLoading(false)
+        const result = await generateNewClaimDraft(data)
+        if (result.success && result.content) {
+          const draft: ClaimDraft = {
+            id: Date.now().toString(),
+            claim_id: params.id,
+            content: result.content,
+            created_at: new Date().toISOString(),
+          }
+          setCurrentDraft(draft)
+
+          const assistantMessage: ChatMessage = {
+            id: Date.now().toString(),
+            role: "assistant",
+            content: "I've generated a draft based on the information provided.",
+            timestamp: new Date().toISOString(),
+            draft,
+          }
+          setMessages((prev) => [...prev, assistantMessage])
+          resolve({ id: draft.id })
+        } else {
+          reject(new Error("Failed to generate draft"))
+        }
+      } catch (error) {
+        console.error("Error generating draft:", error)
+        reject(error)
+      }
+    })
+
+    toast.promise(promise, {
+      loading: "Generating claim draft...",
+      success: "Draft generated successfully!",
+      error: (error) => error.message || "Failed to generate draft",
+    })
+
+    return promise
+  }
+
+  const handleSaveDraft = async (data: Partial<ClaimFormData>) => {
+    const promise = new Promise(async (resolve, reject) => {
+      try {
+        setFormData(data)
+        // TODO: Save draft to database
+        resolve("Draft saved successfully!")
+      } catch (error) {
+        console.error("Error saving draft:", error)
+        reject(error)
+      }
+    })
+
+    toast.promise(promise, {
+      loading: "Saving draft...",
+      success: (message) => message as string,
+      error: "Failed to save draft",
+    })
+  }
+
+  useEffect(() => {
+    const loadClaim = async () => {
+      const result = await getClaim(params.id)
+      if (result.success && result.claim) {
+        setClaim(result.claim)
+      } else {
+        toast.error("Failed to load claim")
       }
     }
+    loadClaim()
+  }, [params.id])
 
-    fetchClaimData()
-  }, [claimId])
 
-  if (isLoading) {
+  if (!claim) {
     return (
-      <DashboardShell>
-        <div className="flex items-center justify-center h-[70vh]">
-          <div className="flex flex-col items-center gap-2">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
-            <p className="text-muted-foreground">Loading claim details...</p>
-          </div>
-        </div>
-      </DashboardShell>
+      <div>
+        <span>Loading</span>
+        <span className="animate-pulse">.</span>
+        <span className="animate-pulse">.</span>
+        <span className="animate-pulse">.</span>
+      </div>
     )
   }
 
   return (
-    <DashboardShell>
-      <div className="flex items-center justify-between mb-6">
-        <DashboardHeader
-          heading="Claim Details"
-          text={claim ? `Viewing details for claim #${claim.id}` : "Loading..."}
-        />
-        <Button variant="outline" onClick={() => router.push("/dashboard/claims")} className="gap-2">
-          <ArrowLeft className="h-4 w-4" /> Back to Claims
-        </Button>
+    <div className="container mx-auto py-6 space-y-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">{claim.claim_title}</h1>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => setIsViewModalOpen(true)}
+          >
+            <Eye className="w-4 h-4 mr-2" />
+            View
+          </Button>
+          <Button
+            onClick={() => router.push(`/dashboard/claims/edit/${params.id}`)}
+          >
+            <Edit className="w-4 h-4 mr-2" />
+            Edit
+          </Button>
+        </div>
       </div>
 
-      {claim && (
-        <div className="grid gap-6">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <div>
-                <CardTitle className="text-xl">
-                  {claim.client_name} - {getClaimTypeLabel(claim.claim_type)}
-                </CardTitle>
-                <CardDescription>
-                  Claim #{claim.id} • Created on {claim.created_at ? new Date(claim.created_at).toLocaleDateString() : "N/A"}
-                </CardDescription>
-              </div>
-              <div className="flex items-center gap-2">{getStatusBadge(claim.status ?? 'N/A')}</div>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <CardContent className="pt-6">
-                <div className="grid gap-6 md:grid-cols-2">
-                  <div className="space-y-4">
-                    <ClaimInformation claim={claim} />
-                    <PropertyDetails claim={claim} />
-                  </div>
-                  <div className="space-y-4">
-                    <DamageNotes claim={claim} />
-                    <ClaimPhotos photos={claim.photos ?? []} />
-                  </div>
-                </div>
-              </CardContent>
+      <div>
+        <h2 className="text-2xl font-bold mb-4">Claim Details</h2>
+        <ClaimForm
+          initialData={formData}
+          onSubmit={handleSubmit}
+          onSaveDraft={handleSaveDraft}
+        />
+      </div>
 
-            </CardContent>
-            <CardFooter className="flex justify-between border-t pt-6">
-              <Button variant="outline" 
-                className="gap-2"
-              >
-                {/* onClick={() => handleEditClaim(claimId)}  */}
-                <Pencil className="h-4 w-4" /> Edit Claim
-              </Button>
-              <div className="flex gap-2">
-                {claim.draft_content ? (
-                  <>
-                    <Button variant="outline" onClick={() => handleViewDraft(claimId)} className="gap-2">
-                      <Eye className="h-4 w-4" /> View Draft
-                    </Button>
-                    <Button onClick={() => handleViewDraft(claimId)} className="gap-2">
-                      <Download className="h-4 w-4" /> Download Draft
-                    </Button>
-                  </>
-                ) : (
-                  <Button onClick={() => handleGenerateDraft(claimId)} className="gap-2">
-                    <FileText className="h-4 w-4" /> Generate Draft
-                  </Button>
-                )}
-              </div>
-            </CardFooter>
-          </Card>
-        </div>
-      )}
-    </DashboardShell>
+
+    </div>
   )
-}
+} 

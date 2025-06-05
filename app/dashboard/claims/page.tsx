@@ -1,8 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
-import { DashboardShell } from "@/components/dashboard/dashboard-shell"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,11 +10,14 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { toast } from "sonner"
-import { Plus, Search, FileText, Eye, Filter, ArrowUpDown } from "lucide-react"
+import { Plus, Search, FileText, Eye, Filter, ArrowUpDown, RefreshCw } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
-import { getStatusBadge, getClaimTypeLabel } from "@/lib/utils"
+import { getStatusBadge, getClaimTypeLabel, formatClaimDate } from "@/lib/utils"
 import { getClaims } from '@/action/claim'
-
+import { deleteClaim } from '@/action/claim'
+import { useClaimNavigation } from "@/hooks/useClaimNavigation"
+import ClaimModal from "@/components/claims/claim-modal"
+import { RefreshButton } from "@/components/ui/refresh-button"
 export default function ClaimsPage() {
   const router = useRouter()
   const [claims, setClaims] = useState<Claim[]>([])
@@ -23,28 +25,36 @@ export default function ClaimsPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [sortBy, setSortBy] = useState("newest")
+  const { handleEditClaim, handleGenerateDraft, handleCreateClaim } = useClaimNavigation()
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false)
+  const [selectedClaim, setSelectedClaim] = useState<Claim | null>(null)
+
+  const handleViewClaim = (claim: Claim) => {
+    setSelectedClaim(claim)
+    setIsViewModalOpen(true)
+  }
+
+  const loadClaims = useCallback(async () => {
+    try {
+      setIsLoading(true)
+      const res = await getClaims({ statusFilter, sortBy })
+
+      if (!res.success) {
+        toast.error(res.message || 'Failed to load claims')
+        return
+      }
+
+      setClaims(res.data)
+    } catch {
+      toast.error('Failed to load claims')
+    } finally {
+      setIsLoading(false)
+    }
+  }, [statusFilter, sortBy])
 
   useEffect(() => {
-    async function loadClaims() {
-      try {
-        setIsLoading(true)
-        const res = await getClaims({ statusFilter, sortBy })
-
-        if (!res.success) {
-          toast.error(res.message || 'Failed to load claims')
-          return
-        }
-
-        setClaims(res.data)
-      } catch {
-        toast.error('Failed to load claims')
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
     loadClaims()
-  }, [statusFilter, sortBy])
+  }, [loadClaims])
 
   // Filter claims based on search query
   const filteredClaims = claims.filter((claim) => {
@@ -59,20 +69,29 @@ export default function ClaimsPage() {
     )
   })
 
-  const handleCreateClaim = () => {
-    router.push("/dashboard/claims/new")
-  }
+  // delete claim
+  const handleDeleteClaim = async (claimId: string) => {
+    const confirmDelete = confirm("Are you sure you want to delete this claim?");
+    if (!confirmDelete) return;
 
-  const handleViewClaim = (id: string) => {
-    router.push(`/dashboard/claims/${id}`)
-  }
+    try {
+      const { success, message } = await deleteClaim(claimId);
 
-  const handleGenerateDraft = (id: string) => {
-    router.push(`/dashboard/claims/${id}/draft`)
-  }
+      if (!success) {
+        toast.error("Failed to delete claim.");
+        return;
+      }
+
+      // Update UI
+      setClaims((prev) => prev.filter((claim) => claim.id !== claimId));
+      toast.success(message);
+    } catch (error) {
+      toast.error("Something went wrong while deleting.");
+    }
+  };
 
   return (
-    <DashboardShell>
+    <div>
       <div className="flex items-center justify-between mb-6">
         <DashboardHeader heading="Claims Management" text="View and manage all your insurance claims" />
         <Button onClick={handleCreateClaim} className="gap-2">
@@ -83,9 +102,14 @@ export default function ClaimsPage() {
       <Card className="mb-6">
         <CardHeader className="pb-3">
           <CardTitle>Claims</CardTitle>
-          <CardDescription>
-            You have {claims.length} total claim{claims.length !== 1 ? "s" : ""}
-          </CardDescription>
+          <div className="flex items-center">
+            <CardDescription>
+              You have {claims.length} total claim{claims.length !== 1 ? "s" : ""}
+            </CardDescription>
+
+            {/* refresh button */}
+            <RefreshButton onClick={loadClaims} />
+          </div>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col md:flex-row gap-4 mb-6">
@@ -155,58 +179,78 @@ export default function ClaimsPage() {
               </Button>
             </div>
           ) : (
-            <div className="rounded-md border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Client Name</TableHead>
-                    <TableHead>Claim Type</TableHead>
-                    <TableHead>Date Created</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Draft</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredClaims.map((claim) => (
-                    <TableRow key={claim.id}>
-                      <TableCell className="font-medium">{claim.client_name || "N/A"}</TableCell>
-                      <TableCell>{getClaimTypeLabel(claim.claim_type)}</TableCell>
-                      <TableCell>{claim.created_at ? new Date(claim.created_at).toLocaleDateString() : "N/A"}</TableCell>
-                      <TableCell>{getStatusBadge(claim.status ?? "unknown")}</TableCell>
-                      <TableCell>
-                        {claim.draft_content ? (
-                          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                            Available
-                          </Badge>
-                        ) : (
-                          <Badge variant="outline" className="bg-gray-50 text-gray-500 border-gray-200">
-                            Not Generated
-                          </Badge>
-                        )}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleViewClaim(claim.id)}
-                            className="h-8 gap-1"
-                          >
-                            <Eye className="h-3.5 w-3.5" />
-                            View
-                          </Button>
-                          <Button size="sm" onClick={() => handleGenerateDraft(claim.id)} className="h-8 gap-1">
-                            <FileText className="h-3.5 w-3.5" />
-                            {claim.draft_content ? "Edit Draft" : "Generate Draft"}
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+                <div className="w-full overflow-x-auto sm:overflow-visible lg:overflow-hidden">
+                  <div className="min-w-max">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Type</TableHead>
+                          <TableHead>Created</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Draft</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {filteredClaims.map((claim) => (
+                          <TableRow key={claim.id}>
+                            <TableCell className="font-medium">{claim.client_name || "N/A"}</TableCell>
+                            <TableCell>{getClaimTypeLabel(claim.claim_type)}</TableCell>
+                            <TableCell>{formatClaimDate(claim.created_at)}</TableCell>
+                            <TableCell>{getStatusBadge(claim.status ?? "unknown")}</TableCell>
+                            <TableCell>
+                              {claim.generated_content ? (
+                                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                                  Available
+                                </Badge>
+                              ) : (
+                                <Badge variant="outline" className="bg-gray-50 text-gray-500 border-gray-200">
+                                  Not Generated
+                                </Badge>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex justify-end gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleViewClaim(claim)}
+                                  className="h-8 gap-1"
+                                >
+                                  <Eye className="h-3.5 w-3.5" />
+                                  View
+                                </Button>
+
+                                {claim.generated_content ? (
+                                  <Button size="sm" onClick={() => handleEditClaim(claim.id)} className="h-8 gap-1">
+                                    <FileText className="h-3.5 w-3.5" />
+                                    Edit Draft
+                                  </Button>
+                                ) : (
+                                  <Button size="sm" onClick={() => handleGenerateDraft(claim.id)} className="h-8 gap-1">
+                                    <FileText className="h-3.5 w-3.5" />
+                                    Generate Draft
+                                  </Button>
+                                )}
+
+                                <Button
+                                  variant="destructive"
+                                  size="sm"
+                                  onClick={() => handleDeleteClaim(claim.id)}
+                                  className="h-8 gap-1"
+                                >
+                                  Delete
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </div>
+
           )}
         </CardContent>
         <CardFooter className="border-t pt-6">
@@ -215,6 +259,14 @@ export default function ClaimsPage() {
           </p>
         </CardFooter>
       </Card>
-    </DashboardShell>
+
+      {/* View Modal */}
+      <ClaimModal
+        isViewModalOpen={isViewModalOpen}
+        setIsViewModalOpen={setIsViewModalOpen}
+        claim={selectedClaim}
+      />
+    </div>
+
   )
 }

@@ -1,11 +1,11 @@
 // const aiPrompt = `
-// Claim Type: ${formData.claimType}
-// Carrier: ${formData.carrierName}
-// Policy #: ${formData.policyNumber}
-// Loss Date: ${formData.lossDate}
-// Description: ${formData.damageDescription}
-// Address: ${formData.addressOfLoss}, ${formData.city}, ${formData.state} ${formData.zipCode}
-// Notes: ${formData.internalNotes}
+// Claim Type: ${formData.claim_type}
+// Carrier: ${formData.carrier_name}
+// Policy #: ${formData.policy_number}
+// Loss Date: ${formData.loss_date}
+// Description: ${formData.damage_description}
+// Address: ${formData.address_of_loss}, ${formData.city}, ${formData.state} ${formData.zip_code}
+// Notes: ${formData.internal_notes}
 
 // Generate a formal insurance claim draft based on the details above.
 // `;

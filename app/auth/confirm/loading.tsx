@@ -68,25 +68,25 @@ export default function Loading() {
                 repeatType: "reverse",
               }}
             >
-              <ShieldCheck className="h-10 w-10 text-[#203F30]" />
+              <ShieldCheck className="h-10 w-10 text-[primary]" />
             </motion.div>
           </motion.div>
 
-          <h2 className="text-2xl font-semibold text-[#203F30] mb-2">Authenticating</h2>
-          <p className="text-[#1A1A1A] mb-6">{message}</p>
+          <h2 className="text-2xl font-semibold text-[primary] mb-2">Authenticating</h2>
+          <p className="text-foreground mb-6">{message}</p>
 
           {/* Progress bar */}
           <div className="w-full h-2 bg-[#F4F4F4] rounded-full mb-6 overflow-hidden">
-            <motion.div initial={{ width: "0%" }} animate={{ width: `${progress}%` }} className="h-full bg-[#9CCA46]" />
+            <motion.div initial={{ width: "0%" }} animate={{ width: `${progress}%` }} className="h-full bg-accent" />
           </div>
 
           <div className="flex items-center justify-center mb-4">
-            <Loader2 className="h-5 w-5 text-[#203F30] animate-spin mr-2" />
+            <Loader2 className="h-5 w-5 text-[primary] animate-spin mr-2" />
             <span className="text-sm text-[#666666]">Please wait while we secure your session</span>
           </div>
 
           <p className="text-xs text-[#666666] max-w-xs">
-           {` We're validating your authentication token and preparing your dashboard. You'll be redirected automatically.`}
+            {` We're validating your authentication token and preparing your dashboard. You'll be redirected automatically.`}
           </p>
         </div>
       </motion.div>

@@ -6,7 +6,8 @@ import { Menu, X } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
-
+import { usePathname } from "next/navigation"
+import Logo from "./Logo"
 interface NavType {
   name: string;
   href: string;
@@ -15,6 +16,7 @@ interface NavType {
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const pathname = usePathname()
 
   // Handle scroll effect
   useEffect(() => {
@@ -45,60 +47,55 @@ export function Navbar() {
   const toggleMenu = () => setIsOpen(!isOpen)
 
   const navItems: NavType[] = [
-    { name: "Home", href: "/" },
     { name: "Features", href: "#features" },
-    { name: "About", href: "#about" },
-    { name: "Contact", href: "#waitlist" },
+    { name: "How it Works", href: "#demo" },
+    { name: "Pricing", href: "/pricing" },
   ]
+
+  const buttonVariants = {
+    initial: { scale: 1 },
+    hover: { scale: 1.05 },
+    tap: { scale: 0.98 },
+  }
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-white shadow-md py-2" : "bg-transparent py-4"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-150 ${scrolled ? "bg-white shadow-md py-2 border-b border-border" : "bg-transparent py-4"
         }`}
     >
-      <div className="container mx-auto px-4 lg:px-0 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className={("h-12 flex items-center gap-2 px-2")}>
-          <div className="size-8 flex items-center">
-            <Image src={'/logos/claimmate-logo-sm.png'} width={76} height={76} alt="ClaimMate logo" className='size-8'/>
-          </div>
-          
-            <div className="w-24 flex items-center"> 
-              <Image src={'/logos/claimmate-logo-text.png'} width={250} height={44} alt="ClaimMate logo" className='w-full' />
-            </div>
-          
-        </Link>
+        <Logo/>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-20">
-          <ul className="flex space-x-6">
+          <ul className="group flex space-x-6">
             {navItems.map((item) => (
-              <li key={item.name}>
-                <Link href={item.href} className="text-foreground hover:text-primary font-medium transition-colors">
+              <li key={item.name} className='cursor-pointer'>
+                <Link
+                  href={pathname === "/" ? item.href : `/#${item.href.replace(/^#/, "")}`}
+                  className="group-hover:text-primary/50 text-foreground hover:text-primary font-medium transition-colors"
+                >
                   {item.name}
                 </Link>
+
+
               </li>
             ))}
           </ul>
-          {/* <div className="flex items-center space-x-4">
-            <Link
-              href="/auth/login"
-              className="cursor-pointer text-foreground hover:text-primary font-semibold transition-colors"
-            >
-              Login
-            </Link>
-            <Link href="/auth/signup">
-              <Button className="cursor-pointer bg-secondary text-primary hover:bg-accent font-semibold transition-colors">
-                Signup
-              </Button>
-            </Link>
-          </div> */}
-          <Link href="#waitlist" onClick={() => setIsOpen(false)} className="block w-full">
-            <Button className="w-full bg-secondary text-primary hover:bg-accent font-semibold transition-colors">
-              Join the Waitlist
-            </Button>
-          </Link>
         </nav>
+        {/* auth */}
+        <motion.a
+          variants={buttonVariants}
+          initial="initial"
+          whileHover="hover"
+          whileTap="tap"
+          className="px-4 py-2 bg-secondary text-primary font-semibold rounded-md hover:bg-secondary/90 transition-colors"
+          href="#waitlist"
+        >
+          Try ClaimMate Free
+        </motion.a>
+
 
         {/* Mobile Menu Button */}
         <button className="cursor-pointer md:hidden text-primary focus:outline-none" onClick={toggleMenu} aria-label="Toggle menu">
@@ -114,45 +111,35 @@ export function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-white border-t border-gray-100 shadow-lg h-screen"
+            className="md:hidden bg-white min-h-screen"
           >
             <div className="container mx-auto px-4 py-4">
-              <ul className="flex flex-col space-y-4">
+              <ul className="group flex flex-col space-y-4">
                 {navItems.map((item) => (
                   <li key={item.name}>
                     <Link
                       href={item.href}
-                      className="block w-fit py-2 text-foreground hover:text-primary font-medium transition-colors"
+                      className="group-hover:text-primary/50  block w-fit py-2 text-foreground hover:text-primary font-medium transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
                       {item.name}
                     </Link>
                   </li>
                 ))}
-                {/* <li className="pt-4">
-                  <div className="flex flex-col space-y-3">
-                    <Link href="/auth/login" onClick={() => setIsOpen(false)} className="block w-full">
-                      <Button
-                        variant="outline"
-                        className="cursor-pointer w-full border-primary text-primary hover:text-primary hover:bg-[#F4F4F4] font-semibold"
-                      >
-                        Login
-                      </Button>
-                    </Link>
-                    <Link href="/auth/signup" onClick={() => setIsOpen(false)} className="block w-full">
-                      <Button className="cursor-pointer w-full bg-secondary text-primary hover:bg-accent font-semibold">
-                        Signup
-                      </Button>
-                    </Link>
-                  </div>
-                </li> */}
-                {/* Keep the commented out waitlist button */}
+
                 <li className="pt-2 ">
-                  <Link href="#waitlist" onClick={() => setIsOpen(false)} className="block w-full">
-                    <Button className="w-full bg-secondary text-primary hover:bg-accent font-semibold transition-colors">
-                      Join the Waitlist
-                    </Button>
-                  </Link>
+
+                  {/* auth */}
+                  <motion.a
+                    variants={buttonVariants}
+                    initial="initial"
+                    whileHover="hover"
+                    whileTap="tap"
+                    className="px-4 py-2 bg-secondary text-primary font-semibold rounded-md hover:bg-secondary/90 transition-colors"
+                    href="#waitlist"
+                  >
+                    Try ClaimMate Free
+                  </motion.a>
                 </li>
               </ul>
             </div>

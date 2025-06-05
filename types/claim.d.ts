@@ -14,38 +14,51 @@ declare interface Claim {
   notes?: string
   instructions?: string
   photos?: string[]
-  draft_content?: string
+  content?: string
   template_used?: string
   status?: string
   created_at?: string
   updated_at?: string
   user_id?: string
+  draft_versions?: DraftVersion[]
+  current_draft_version?: number
   [key: string]: any
 }
 
-// Claim form data as used in the frontend (camelCase)
+// Claim form data as used in the frontend
 declare interface ClaimFormData {
-    // Claim Information
-    claimType: string
-    clientName: string
-    carrierName: string
-    policyNumber: string
-    lossDate: string
-  
-    // Property Details
-    damageDescription: string
-    photos: string[]
-    addressOfLoss: string
-    city: string
-    state: string
-    zipCode: string
-  
-    // Notes
-    internalNotes: string
-    specialInstructions: string
-  
-    // Template
-    templateUsed: string
+  // Overview
+  claim_title: string
+  claim_type: 'auto' | 'property' | 'health' | 'theft' | 'fire' | 'other'
+  client_name: string
+  carrier_name: string
+  policy_number: string
+  incident_date: string
+  loss_date: string
+  incident_location: string
+  status: 'draft' | 'submitted' | 'exported'
+
+  // People Involved
+  parties_involved: string[]
+  witnesses?: string[]
+  police_report_filed: boolean
+  police_report_number?: string
+
+  // Incident Details
+  incident_description: string
+  how_it_happened: string
+  injuries?: string
+  attachments?: string[]
+
+  // Losses & Damages
+  damages_description: string
+  estimated_cost: string
+  repairs_done: boolean
+  repairs_details?: string
+
+  // Additional Context
+  additional_notes?: string
+  tone?: 'formal' | 'empathetic' | 'neutral' | 'urgent'
 }
 
 
@@ -61,4 +74,27 @@ declare interface GenerateClaimDraftResponse {
   success: boolean
   text?: string
   message?: string
+}
+
+// Draft version interface
+declare interface DraftVersion {
+  id: string
+  claim_id: string
+  content: string
+  formatted_content: string
+  version: number
+  status: 'draft' | 'reviewed' | 'final'
+  corrections?: string[]
+  created_at: string
+  updated_at: string
+}
+
+// Add DraftCorrection interface
+declare interface DraftCorrection {
+  id: string
+  draft_version_id: string
+  correction_text: string
+  status: 'pending' | 'applied'
+  created_at: string
+  updated_at: string
 }

@@ -6,8 +6,30 @@ import { useOnboarding } from "../onboarding-provider"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Building2, User } from "lucide-react"
+import { RefObject } from "react"
+import { buttonVariants } from "../onboarding-flow"
 
-export function BasicInfoStep() {
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 },
+}
+
+interface BasicInfoStepProps {
+  nextButtonRef: RefObject<HTMLButtonElement | null>
+}
+
+export function BasicInfoStep({ nextButtonRef }: BasicInfoStepProps) {
   const { setCurrentStep, onboardingData, updateOnboardingData, saveProgress } = useOnboarding()
   const [fullName, setFullName] = useState(onboardingData.fullName || "")
   const [organization, setOrganization] = useState(onboardingData.organization || "")
@@ -28,65 +50,81 @@ export function BasicInfoStep() {
   }
 
   return (
-    <div className="space-y-8 py-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="text-center"
-      >
-        <h2 className="text-2xl font-bold text-[#203F30] mb-2">{`Let's get to know you`}</h2>
-        <p className="text-[#1A1A1A]">{`We'll use this information to personalize your ClaimMate experience.`}</p>
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+      className="max-w-lg mx-auto space-y-6 md:space-y-8"
+    >
+      {/* Header */}
+      <motion.div variants={itemVariants} className="text-center space-y-2">
+        <h2 className="text-xl md:text-2xl font-semibold text-primary">Tell us about yourself</h2>
+        <p className="text-sm md:text-base text-muted-foreground">
+          This information helps us personalize your experience
+        </p>
       </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        className="max-w-lg mx-auto space-y-6"
-      >
+      {/* Form */}
+      <motion.div variants={itemVariants} className="space-y-4 md:space-y-6">
+        {/* Full Name */}
         <div className="space-y-2">
-          <Label htmlFor="fullName" className="text-[#1A1A1A]">
-            Full Name <span className="text-red-500">*</span>
+          <Label htmlFor="fullName" className="text-sm font-medium">
+            Full Name
           </Label>
-          <Input
-            id="fullName"
-            value={fullName}
-            onChange={(e) => {
-              setFullName(e.target.value)
-              setError("")
-            }}
-            placeholder="Enter your full name"
-            className="border-[#E2E8F0] focus:border-[#9CCA46] focus:ring-[#9CCA46]"
-          />
+          <div className="relative">
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-muted-foreground" />
+            <Input
+              id="fullName"
+              type="text"
+              value={fullName}
+              onChange={(e) => {
+                setFullName(e.target.value)
+                setError("")
+              }}
+              placeholder="John Doe"
+              className={`pl-9 md:pl-10 h-10 md:h-11 text-sm md:text-base ${error ? "border-red-500" : ""}`}
+            />
+          </div>
+          {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
         </div>
 
+        {/* Organization */}
         <div className="space-y-2">
-          <Label htmlFor="organization" className="text-[#1A1A1A]">
-            Organization
+          <Label htmlFor="organization" className="text-sm font-medium">
+            Organization (Optional)
           </Label>
-          <Input
-            id="organization"
-            value={organization}
-            onChange={(e) => setOrganization(e.target.value)}
-            placeholder="Enter your company or organization (optional)"
-            className="border-[#E2E8F0] focus:border-[#9CCA46] focus:ring-[#9CCA46]"
-          />
+          <div className="relative">
+            <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-muted-foreground" />
+            <Input
+              id="organization"
+              type="text"
+              value={organization}
+              onChange={(e) => setOrganization(e.target.value)}
+              placeholder="Company name"
+              className="pl-9 md:pl-10 h-10 md:h-11 text-sm md:text-base"
+            />
+          </div>
         </div>
-
-        {error && <p className="text-red-500 text-sm">{error}</p>}
       </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
-        className="flex justify-end"
-      >
-        <Button onClick={handleNext} className="bg-[#203F30] text-white hover:bg-[#1A1A1A]">
-          Continue
-        </Button>
+      {/* Actions */}
+      <motion.div variants={itemVariants} className="flex justify-end pt-4">
+        <motion.div
+          variants={buttonVariants.next}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+        >
+          <Button
+            onClick={handleNext}
+            ref={nextButtonRef}
+            data-action="next"
+            className="w-full md:w-auto bg-primary text-white hover:bg-primary/90 font-medium px-6 md:px-8 h-10 md:h-11 text-sm md:text-base"
+          >
+            Continue
+          </Button>
+        </motion.div>
       </motion.div>
-    </div>
+    </motion.div>
   )
 }

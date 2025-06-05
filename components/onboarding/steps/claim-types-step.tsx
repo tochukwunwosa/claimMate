@@ -4,28 +4,73 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import { useOnboarding } from "../onboarding-provider"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
+import { Home, Car, Shield, Tornado, HelpCircle, CheckCircle2 } from "lucide-react"
+import { RefObject } from "react"
 
 const claimTypes = [
-  { id: "property", label: "Property" },
-  { id: "auto", label: "Auto" },
-  { id: "casualty", label: "Casualty" },
-  { id: "cat", label: "CAT" },
-  { id: "other", label: "Other" },
+  {
+    id: "property",
+    label: "Property",
+    icon: Home,
+    description: "Residential and commercial property claims",
+  },
+  {
+    id: "auto",
+    label: "Auto",
+    icon: Car,
+    description: "Vehicle damage and liability claims",
+  },
+  {
+    id: "casualty",
+    label: "Casualty",
+    icon: Shield,
+    description: "Personal injury and liability claims",
+  },
+  {
+    id: "cat",
+    label: "CAT",
+    icon: Tornado,
+    description: "Catastrophic and natural disaster claims",
+  },
+  {
+    id: "other",
+    label: "Other",
+    icon: HelpCircle,
+    description: "Other specialized claim types",
+  },
 ]
 
-export function ClaimTypesStep() {
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 },
+}
+
+interface ClaimTypesStepProps {
+  nextButtonRef: RefObject<HTMLButtonElement | null>
+  backButtonRef: RefObject<HTMLButtonElement | null>
+}
+
+export function ClaimTypesStep({ nextButtonRef, backButtonRef }: ClaimTypesStepProps) {
   const { setCurrentStep, onboardingData, updateOnboardingData, saveProgress } = useOnboarding()
   const [selectedTypes, setSelectedTypes] = useState<string[]>(onboardingData.claimTypes || [])
   const [error, setError] = useState("")
 
-  const handleTypeChange = (typeId: string, checked: boolean) => {
+  const handleTypeChange = (typeId: string) => {
     setSelectedTypes((prev) => {
-      if (checked) {
-        return [...prev, typeId]
-      } else {
+      if (prev.includes(typeId)) {
         return prev.filter((id) => id !== typeId)
+      } else {
+        return [...prev, typeId]
       }
     })
     setError("")
@@ -47,55 +92,97 @@ export function ClaimTypesStep() {
   }
 
   return (
-    <div className="space-y-8 py-4">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="text-center"
-      >
-        <h2 className="text-2xl font-bold text-[#203F30] mb-2">What types of claims do you handle?</h2>
-        <p className="text-[#1A1A1A]">{`Select all that apply. We'll customize your templates accordingly.`}</p>
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+      className="max-w-2xl mx-auto space-y-6 md:space-y-8"
+    >
+      {/* Header */}
+      <motion.div variants={itemVariants} className="text-center space-y-2">
+        <h2 className="text-xl md:text-2xl font-semibold text-primary">Select Claim Types</h2>
+        <p className="text-sm md:text-base text-muted-foreground">
+          Choose the types of claims you commonly handle
+        </p>
       </motion.div>
 
+      {/* Claim Types Grid */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-        className="max-w-lg mx-auto"
+        variants={itemVariants}
+        className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {claimTypes.map((type) => (
-            <div key={type.id} className="flex items-center space-x-3">
-              <Checkbox
-                id={type.id}
-                checked={selectedTypes.includes(type.id)}
-                onCheckedChange={(checked) => handleTypeChange(type.id, checked === true)}
-              />
-              <Label htmlFor={type.id} className="text-[#1A1A1A] font-medium cursor-pointer">
-                {type.label}
-              </Label>
-            </div>
-          ))}
-        </div>
-
-        {error && <p className="text-red-500 text-sm mt-4">{error}</p>}
+        {claimTypes.map((type) => {
+          const isSelected = selectedTypes.includes(type.id)
+          return (
+            <motion.button
+              key={type.id}
+              onClick={() => handleTypeChange(type.id)}
+              variants={itemVariants}
+              whileHover={{ scale: 1.02 }}
+              className={`relative p-4 md:p-6 text-left rounded-xl border-2 transition-all ${isSelected
+                ? "border-primary bg-primary/5"
+                : "border-muted hover:border-primary/50"
+                }`}
+            >
+              <div className="flex items-start space-x-3 md:space-x-4">
+                <type.icon
+                  className={`w-5 h-5 md:w-6 md:h-6 ${isSelected ? "text-primary" : "text-muted-foreground"
+                    }`}
+                />
+                <div className="flex-1">
+                  <h3
+                    className={`text-sm md:text-base font-medium ${isSelected ? "text-primary" : "text-foreground"
+                      }`}
+                  >
+                    {type.label}
+                  </h3>
+                  <p className="text-xs md:text-sm text-muted-foreground mt-0.5 md:mt-1">
+                    {type.description}
+                  </p>
+                </div>
+                {isSelected && (
+                  <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5 text-primary absolute top-3 md:top-4 right-3 md:right-4" />
+                )}
+              </div>
+            </motion.button>
+          )
+        })}
       </motion.div>
 
+      {/* Selected Count */}
+      <motion.div variants={itemVariants} className="text-center">
+        <p className="text-xs md:text-sm text-muted-foreground">
+          {selectedTypes.length === 0
+            ? "No claim types selected"
+            : `${selectedTypes.length} ${selectedTypes.length === 1 ? "type" : "types"
+            } selected`}
+        </p>
+        {error && <p className="text-xs md:text-sm text-red-500 mt-1">{error}</p>}
+      </motion.div>
+
+      {/* Actions */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
-        className="flex justify-between"
+        variants={itemVariants}
+        className="flex justify-between items-center pt-4"
       >
-        <Button onClick={handleBack} variant="outline" className="border-[#203F30] text-[#203F30]">
+        <Button
+          onClick={handleBack}
+          ref={backButtonRef}
+          variant="outline"
+          data-action="back"
+          className="h-10 md:h-11 text-sm md:text-base border-primary text-primary hover:bg-primary hover:text-white"
+        >
           Back
         </Button>
-
-        <Button onClick={handleNext} className="bg-[#203F30] text-white hover:bg-[#1A1A1A]">
+        <Button
+          onClick={handleNext}
+          ref={nextButtonRef}
+          data-action="next"
+          className="h-10 md:h-11 text-sm md:text-base bg-primary text-white hover:bg-primary/90 font-medium px-6 md:px-8"
+        >
           Continue
         </Button>
       </motion.div>
-    </div>
+    </motion.div>
   )
 }

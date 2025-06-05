@@ -19,7 +19,7 @@ export function AuthButton() {
   const router = useRouter()
   const supabase = createClient()
 
-  if(!user || !profile) return null;
+  if (!user || !profile) return null;
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
@@ -29,7 +29,7 @@ export function AuthButton() {
 
   if (loading) {
     return (
-      <Button variant="ghost" disabled className="text-[#203F30]">
+      <Button variant="ghost" disabled className="text-primary">
         Loading...
       </Button>
     )
@@ -39,7 +39,7 @@ export function AuthButton() {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="flex items-center gap-2 text-[#203F30]">
+          <Button variant="ghost" className="flex items-center gap-2 text-primary">
             <UserIcon size={18} />
             <span className="hidden md:inline">{profile.full_name || user.email?.split('@')[0]}</span>
           </Button>
@@ -64,12 +64,12 @@ export function AuthButton() {
   return (
     <div className="flex gap-2">
       <Link href="/auth/login">
-        <Button variant="ghost" className="text-[#203F30]">
+        <Button variant="ghost" className="text-primary">
           Log in
         </Button>
       </Link>
       <Link href="/auth/signup">
-        <Button className="bg-[#DBFB1E] text-[#203F30] hover:bg-[#9CCA46]">Sign up</Button>
+        <Button className="bg-secondary text-primary hover:bg-accent">Sign up</Button>
       </Link>
     </div>
   )

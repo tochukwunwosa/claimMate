@@ -25,7 +25,7 @@ export default function AuthError({
   }, [title, message])
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F4F4F4] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-muted px-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -42,11 +42,11 @@ export default function AuthError({
             <AlertTriangle className="h-10 w-10 text-red-500" />
           </motion.div>
 
-          <h2 className="text-2xl font-semibold text-[#203F30] mb-2">{title}</h2>
-          <p className="text-[#1A1A1A] mb-8">{message}</p>
+          <h2 className="text-2xl font-semibold text-primary mb-2">{title}</h2>
+          <p className="text-foreground mb-8">{message}</p>
 
           <Link href={redirectUrl}>
-            <Button className="bg-[#203F30] text-white hover:bg-[#1A1A1A]">{redirectLabel}</Button>
+            <Button className="bg-primary text-white hover:bg-foreground">{redirectLabel}</Button>
           </Link>
         </div>
       </motion.div>

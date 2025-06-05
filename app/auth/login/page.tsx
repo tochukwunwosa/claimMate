@@ -7,230 +7,205 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { Eye, EyeOff, AlertCircle } from "lucide-react"
-
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form"
-import Link from "next/link"
-import LoadingSpinner from '@/components/ui/loading-spinner'
-import { cn } from "@/lib/utils"
-import { loginUser, resetPasswordEmail } from '@/action/auth'
-import { useLocalStorage } from "@/hooks/useLocalStorage";
-import DashboardLoader from "@/app/dashboard/loading"
+import { useLocalStorage } from "@/hooks/useLocalStorage"
+import { loginUser, resetPasswordEmail } from "@/action/auth"
 import { toast } from "sonner"
+import { loginFormSchema } from "@/lib/validations/auth"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 
-const formSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(1, "Password is required"),
-})
+type FormSchemaType = z.infer<typeof loginFormSchema>
 
-type FormSchemaType = z.infer<typeof formSchema>
-
-export default function SignIn() {
+export default function LoginPage() {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [storedEmail, , removeStoredEmail] = useLocalStorage("user-email", '')
-  const [isRedirecting, setIsRedirecting] = useState(false)
+  const [storedEmail, , removeStoredEmail] = useLocalStorage("user-email", "")
+  const [isLoading, setIsLoading] = useState(false)
 
   const form = useForm<FormSchemaType>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
     mode: "onChange",
   })
 
-
-  // Once storedEmail is available, update the form
+  // Pre-fill email if available from signup
   useEffect(() => {
     if (storedEmail) {
-      form.reset({
-        email: storedEmail,
-        password: "",
-      })
+      form.setValue("email", storedEmail)
     }
   }, [storedEmail, form])
 
+  const onSubmit = useCallback(
+    async (values: FormSchemaType) => {
+      setError(null)
+      setIsLoading(true)
 
-  const onSubmit = useCallback(async (values: FormSchemaType) => {
-    setError(null)
+      try {
+        const result = await loginUser(values.email, values.password)
 
-    const result = await loginUser(values.email, values.password)
+        if (result?.error) {
+          setError(result.error)
+          return
+        }
 
-    if (result?.error) {
-      setError(result.error)
-      return
-    }
+        toast.success("Welcome back!")
 
-    toast.success('Login successful')
+        if (!result.onboarded) {
+          toast.info("Please complete your profile setup")
+          router.push("/onboarding")
+        } else {
+          router.push("/dashboard")
+        }
 
-    if (!result.onboarded) {
-      toast.info("You're almost there! Please complete your onboarding.")
-      router.push('/onboarding')
-    } else {
-      setIsRedirecting(true)
-      router.push('/dashboard')
-    }
+        removeStoredEmail()
+      } catch (err) {
+        setError("An unexpected error occurred. Please try again.")
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    [router, removeStoredEmail]
+  )
 
-    removeStoredEmail()
-  }, [router, removeStoredEmail])
-
-  // reset password handler
-  const handleresetPasswordEmail = useCallback(async () => {
+  const handleResetPassword = useCallback(async () => {
     const email = form.getValues("email")
     if (!email) {
       setError("Please enter your email address to reset your password")
       return
     }
 
-    const result = await resetPasswordEmail(email)
-    if (result?.error) {
-      setError(result.error)
-    } else {
-      alert("If this email exists, you will receieve a reset link")
+    try {
+      const result = await resetPasswordEmail(email)
+      if (result?.error) {
+        setError(result.error)
+      } else {
+        toast.success(
+          "If an account exists with this email, you'll receive password reset instructions."
+        )
+        setError(null)
+      }
+    } catch (err) {
+      setError("Failed to send reset password email. Please try again.")
     }
   }, [form])
 
   return (
+    <div className="space-y-6">
+      <div className="space-y-2 text-center">
+        <h1 className="text-2xl font-semibold tracking-tight">Welcome back</h1>
+        <p className="text-muted-foreground">
+          Enter your credentials to access your account
+        </p>
+      </div>
 
-    <div className="min-h-screen pt-10 px-4 flex items-center justify-center">
-      {/* go back home */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.2 }}
-        className="absolute top-6 left-6"
-      >
-        <Link
-          href="/"
-          className="flex items-center space-x-2 text-primary hover:text-accent transition-all duration-200"
-          aria-label="Go back home"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              fillRule="evenodd"
-              d="M10 18a1 1 0 01-.707-.293l-7-7a1 1 0 010-1.414l7-7A1 1 0 0111.414 3.707L5.828 9.293H18a1 1 0 110 2H5.828l5.586 5.586A1 1 0 0110 18z"
-              clipRule="evenodd"
-            />
-          </svg>
-          <span className="font-medium">Home</span>
-        </Link>
-      </motion.div>
-      {/* main */}
-      {isRedirecting ? (
-        <div className="flex min-h-screen items-center justify-center">
-          <div className="text-center">
-            <DashboardLoader />
-          </div>
-        </div>
-      ) :
-        (<motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="w-full max-w-md"
-        >
-          <div className="bg-white rounded-lg shadow-sm p-8">
-            <div className="text-center mb-8">
-              <h1 className="text-2xl font-bold text-[#203F30]">Welcome back</h1>
-              <p className="text-[#1A1A1A] mt-2">Log in to your ClaimMate account</p>
-            </div>
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
-            {error && (
-              <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-md flex items-start">
-                <AlertCircle className="h-5 w-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" aria-hidden="true" />
-                <p className="text-sm text-red-600">{error}</p>
-              </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="you@example.com"
+                    type="email"
+                    autoComplete="email"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
+          />
 
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email address</FormLabel>
-                      <FormControl>
-                        <Input placeholder="you@example.com" type="email" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <div className="relative">
+                  <FormControl>
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="current-password"
+                      {...field}
+                      className="pr-10"
+                    />
+                  </FormControl>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-muted-foreground" />
+                    )}
+                    <span className="sr-only">
+                      {showPassword ? "Hide password" : "Show password"}
+                    </span>
+                  </Button>
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex justify-between items-center">
-                        <FormLabel>Password</FormLabel>
-                        <button
-                          type="button"
-                          onClick={handleresetPasswordEmail}
-                          className="cursor-pointer text-xs text-[#203F30] hover:underline"
-                        >
-                          Forgot password?
-                        </button>
-                      </div>
-                      <div className="relative">
-                        <FormControl>
-                          <Input
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Enter your password"
-                            className="pr-10"
-                            {...field}
-                          />
-                        </FormControl>
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword((prev) => !prev)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                          aria-label={showPassword ? "Hide password" : "Show password"}
-                        >
-                          {showPassword ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
-                        </button>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isLoading || !form.formState.isValid}
+          >
+            {isLoading ? "Signing in..." : "Sign in"}
+          </Button>
+        </form>
+      </Form>
 
-                <Button
-                  type="submit"
-                  aria-label='Submit'
-                  className={cn("w-full bg-secondary text-primary hover:bg-accent font-semibold disabled:hover:bg-secondary")}
-                  disabled={form.formState.isSubmitting || !form.formState.isValid}
-                >
-                  {form.formState.isSubmitting ?
-                    <div className='flex items-center gap-2'>Logging in... <LoadingSpinner size={14} /></div>
-                    : "Login"}
-                </Button>
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          {/* <Separator /> */}
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-muted-foreground">
+            Or continue with
+          </span>
+        </div>
+      </div>
 
-              </form>
-            </Form>
-
-            <div className="mt-6 text-center">
-              <p className="text-sm text-[#1A1A1A]">
-                {`Don't have an account? `}
-                <Link href="/auth/signup" className="text-[#203F30] hover:underline font-medium">
-                  Sign up
-                </Link>
-              </p>
-            </div>
-          </div>
-        </motion.div>)
-      }
+      <div className="grid gap-4">
+        <Button variant="outline" className="w-full" onClick={handleResetPassword}>
+          Forgot password?
+        </Button>
+        <div className="text-center text-sm">
+          Don't have an account?{" "}
+          <Link
+            href="/auth/signup"
+            className="font-medium text-primary hover:underline"
+          >
+            Sign up
+          </Link>
+        </div>
+      </div>
     </div>
   )
 }

@@ -12,8 +12,8 @@ import {
   SidebarMenuButton,
   useSidebar,
 } from "@/components/ui/sidebar"
-import SidebarUser from '@/components/sidebar-user'
 import { cn } from "@/lib/utils"
+import SidebarUser from "./sidebar-user"
 
 const navItems = [
   {
@@ -52,40 +52,40 @@ export function DashboardNav() {
   const { state } = useSidebar()
   const isCollapsed = state === "collapsed"
 
- 
+
 
   return (
     <>
       <SidebarHeader className="border-b border-border/40">
-        <Link href="/" className={cn("h-12 flex items-center gap-2", isCollapsed ? "justify-center px-0" : "px-2")}>
+        <Link href="/dashboard" className={cn("h-12 flex items-center gap-2", isCollapsed ? "justify-center px-0" : "px-2")}>
           <div className="size-8 flex items-center">
-            <Image src={'/logos/claimmate-logo-sm.png'} width={76} height={76} alt="ClaimMate logo" className='size-8'/>
+            <Image src={'/logos/claimmate-logo-sm.png'} width={76} height={76} alt="ClaimMate logo" className='size-8' />
           </div>
-          {!isCollapsed && 
-            <div className="w-24 flex items-center"> 
+          {!isCollapsed &&
+            <div className="w-24 flex items-center">
               <Image src={'/logos/claimmate-logo-text.png'} width={250} height={44} alt="ClaimMate logo" className='w-full' />
             </div>
           }
         </Link>
       </SidebarHeader>
 
+      <div className='pt-4'> 
       <SidebarMenu>
         {navItems.map((item) => (
           <SidebarMenuItem key={item.href + item.title}>
             <SidebarMenuButton asChild isActive={pathname === item.href} tooltip={item.title} className={`${pathname === item.href ? 'text-accent font-medium' : 'text-primary'} hover:text-accent`}
             >
-              <Link href={item.href} className={cn(isCollapsed && "justify-center")}>
+              <Link href={item.href} >
                 <item.icon className="size-5" />
                 <span >{item.title}</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         ))}
-      </SidebarMenu>
+        </SidebarMenu>
+      </div>
 
-      <SidebarFooter className="mt-auto border-t border-border/40">
-        <SidebarUser isCollapsed={isCollapsed}/>        
-      </SidebarFooter>
+      
     </>
   )
 }

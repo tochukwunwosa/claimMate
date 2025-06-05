@@ -26,9 +26,9 @@ export function AuthLoadingState({
         transition={{ duration: 0.5 }}
         className="bg-white p-8 rounded-lg shadow-sm flex flex-col items-center"
       >
-        {icon || <Loader2 className="h-12 w-12 text-[#203F30] animate-spin mb-4" />}
-        <h2 className="text-xl font-semibold text-[#203F30]">{title}</h2>
-        <p className="text-[#1A1A1A] mt-2">{message}</p>
+        {icon || <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />}
+        <h2 className="text-xl font-semibold text-primary">{title}</h2>
+        <p className="text-foreground mt-2">{message}</p>
       </motion.div>
     </div>
   )

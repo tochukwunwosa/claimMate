@@ -11,14 +11,14 @@ export const templates: TemplateOption[] = [
     name: "Detailed Report",
     description: "Comprehensive claim report with full details and analysis",
     promptTemplate: `Create a detailed professional insurance claim report using the following information:
-      Claim Type: {claimType}
-      Carrier Name: {carrierName}
-      Client Name: {clientName}
-      Policy Number: {policyNumber}
-      Loss Date: {lossDate}
-      Address of Loss: {addressOfLoss}, {city}, {state} {zipCode}
+      Claim Type: {claim_type}
+      Carrier Name: {carrier_name}
+      Client Name: {client_name}
+      Policy Number: {policy_number}
+      Loss Date: {loss_date}
+      Address of Loss: {address_of_loss}, {city}, {state} {zip_code}
       
-      Damage Description: {damageDescription}
+      Damage Description: {damage_description}
       
       Format the report with these sections:
       1. CLAIM SUMMARY (brief overview)
@@ -35,16 +35,16 @@ export const templates: TemplateOption[] = [
     name: "Client Letter",
     description: "Formal letter to the client explaining their claim status",
     promptTemplate: `Write a formal insurance claim letter to the client using the following information:
-      Client Name: {clientName}
-      Claim Type: {claimType}
-      Carrier Name: {carrierName}
-      Policy Number: {policyNumber}
-      Loss Date: {lossDate}
-      Address of Loss: {addressOfLoss}, {city}, {state} {zipCode}
-      Damage Description: {damageDescription}
+      Client Name: {client_name}
+      Claim Type: {claim_type}
+      Carrier Name: {carrier_name}
+      Policy Number: {policy_number}
+      Loss Date: {loss_date}
+      Address of Loss: {address_of_loss}, {city}, {state} {zip_code}
+      Damage Description: {damage_description}
       
       The letter should:
-      - Be dated {currentDate}
+      - Be dated {current_date}
       - Have a proper business letter format with letterhead for the carrier
       - Acknowledge receipt of their claim
       - Reference policy coverage briefly
@@ -60,13 +60,13 @@ export const templates: TemplateOption[] = [
     name: "Claim Summary",
     description: "Brief summary of claim details for quick reference",
     promptTemplate: `Create a concise insurance claim summary using the following information:
-      Claim Type: {claimType}
-      Carrier Name: {carrierName}
-      Client Name: {clientName}
-      Policy Number: {policyNumber}
-      Loss Date: {lossDate}
-      Address of Loss: {addressOfLoss}, {city}, {state} {zipCode}
-      Damage Description: {damageDescription}
+      Claim Type: {claim_type}
+      Carrier Name: {carrier_name}
+      Client Name: {client_name}
+      Policy Number: {policy_number}
+      Loss Date: {loss_date}
+      Address of Loss: {address_of_loss}, {city}, {state} {zip_code}
+      Damage Description: {damage_description}
       
       Format as a one-page summary with bullet points under these headings:
       • CLAIM INFORMATION

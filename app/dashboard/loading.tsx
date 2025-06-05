@@ -52,17 +52,17 @@ export default function DashboardLoader() {
         <div className="flex flex-col items-center text-center">
           <div className="w-full flex flex-col items-center justify-center mb-4">
 
-            <Loader2 className="size-4 text-[#203F30] animate-spin mr-2" />
+            <Loader2 className="size-4 text-primary animate-spin mr-2" />
             <AnimatePresence>
               <motion.p
-                className="text-[#1A1A1A] mb-6"
+                className="text-foreground mb-6"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 10 }}
                 transition={{ duration: 0.6 }}
               >
-                {showMessage ?  message :  <AnimatedDots text={'Loading dashboard'}/>}
-              </motion.p>             
+                {showMessage ? message : <AnimatedDots text={'Loading dashboard'} />}
+              </motion.p>
             </AnimatePresence>
           </div>
         </div>
