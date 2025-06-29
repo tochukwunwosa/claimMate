@@ -5,13 +5,13 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 import { AnimatePresence } from 'framer-motion';
 import Script from 'next/script';
 import { Navbar } from '@/components/navbar';
-import { Footer } from '@/components/Footer';
 import { usePathname } from 'next/navigation';
 import './globals.css';
 import { Inter } from 'next/font/google';
 import { jsonLd } from '@/lib/jsonld';
 import { UserProvider } from '@/contexts/UserContext'
 import { Toaster } from 'sonner';
+import Footer from '@/components/Footer';
 
 
 const inter = Inter({ subsets: ['latin'] });
@@ -36,7 +36,7 @@ export default function RootLayoutClient({
           async
           defer
           src="https://cloud.umami.is/script.js"
-          // data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
+          data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
           />
           {/* SEO */}
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />

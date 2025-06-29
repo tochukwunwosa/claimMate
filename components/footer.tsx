@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { motion } from "framer-motion"
 import { Twitter, Linkedin, Mail } from "lucide-react"
 
-export function Footer() {
+export default function Footer() {
   const socialLinks = [
     { icon: <Twitter className="h-5 w-5" />, href: "https://twitter.com", label: "Twitter" },
     { icon: <Linkedin className="h-5 w-5" />, href: "https://linkedin.com", label: "LinkedIn" },
