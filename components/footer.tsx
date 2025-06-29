@@ -3,12 +3,12 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from "framer-motion"
-import { Twitter, Linkedin, Mail } from "lucide-react"
+import { Mail } from "lucide-react"
 
 export default function Footer() {
   const socialLinks = [
-    { icon: <Twitter className="h-5 w-5" />, href: "https://twitter.com", label: "Twitter" },
-    { icon: <Linkedin className="h-5 w-5" />, href: "https://linkedin.com", label: "LinkedIn" },
+    // { icon: <Twitter className="h-5 w-5" />, href: "https://twitter.com", label: "Twitter" },
+    // { icon: <Linkedin className="h-5 w-5" />, href: "https://linkedin.com", label: "LinkedIn" },
     { icon: <Mail className="h-5 w-5" />, href: "mailto:hello@claimmate.com", label: "Email" },
   ]
 
