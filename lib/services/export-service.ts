@@ -129,7 +129,7 @@ export class ExportService {
   }
 }
 
-export async function exportToPDF(content: string, claim: Claim): Promise<Blob> {
+export async function exportToPDF(content: string): Promise<Blob> {
   const doc = new jsPDF()
   
   // Set font and size
@@ -143,7 +143,7 @@ export async function exportToPDF(content: string, claim: Claim): Promise<Blob> 
   return doc.output('blob')
 }
 
-export async function exportToDOCX(content: string, claim: Claim): Promise<Blob> {
+export async function exportToDOCX(content: string): Promise<Blob> {
   const doc = new Document({
     sections: [{
       properties: {},
@@ -160,6 +160,6 @@ export async function exportToDOCX(content: string, claim: Claim): Promise<Blob>
   return await Packer.toBlob(doc)
 }
 
-export async function exportToTXT(content: string, claim: Claim): Promise<Blob> {
+export async function exportToTXT(content: string): Promise<Blob> {
   return new Blob([content], { type: 'text/plain' })
 } 

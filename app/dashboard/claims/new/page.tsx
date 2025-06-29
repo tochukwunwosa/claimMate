@@ -11,8 +11,8 @@ import { type ClaimFormData } from "@/lib/validations/claim"
 export default function ClaimPage() {
   const router = useRouter()
   const [formData, setFormData] = useState<Partial<ClaimFormData>>({})
-  const [messages, setMessages] = useState<ChatMessage[]>([])
-  const [currentDraft, setCurrentDraft] = useState<ClaimDraft | null>(null)
+  // const [messages, setMessages] = useState<ChatMessage[]>([])
+  // const [currentDraft, setCurrentDraft] = useState<ClaimDraft | null>(null)
 
   const handleSubmit = async (data: ClaimFormData) => {
     try {
@@ -36,30 +36,30 @@ export default function ClaimPage() {
         throw new Error(result.error || "Failed to generate draft")
       }
 
-      const draft: ClaimDraft = {
-        id: Date.now().toString(),
-        claim_id: id,
-        content: result.content,
-        created_at: new Date().toISOString(),
-      }
+      // const draft: ClaimDraft = {
+      //   id: Date.now().toString(),
+      //   claim_id: id,
+      //   content: result.content,
+      //   created_at: new Date().toISOString(),
+      // }
 
-      setCurrentDraft(draft)
+      // setCurrentDraft(draft)
 
-      const assistantMessage: ChatMessage = {
-        id: Date.now().toString(),
-        role: "assistant",
-        content: "I've drafted your claim letter based on the information provided. Here it is:\n\n" +
-          result.content + "\n\n" +
-          "Would you like me to make any changes? For example:\n" +
-          "- Add more details about the incident\n" +
-          "- Modify any specific section\n" +
-          "- Adjust the tone or formatting\n\n" +
-          "Just let me know what you'd like to change and I'll help you refine it.",
-        timestamp: new Date().toISOString(),
-        draft,
-      }
+      // const assistantMessage: ChatMessage = {
+      //   id: Date.now().toString(),
+      //   role: "assistant",
+      //   content: "I've drafted your claim letter based on the information provided. Here it is:\n\n" +
+      //     result.content + "\n\n" +
+      //     "Would you like me to make any changes? For example:\n" +
+      //     "- Add more details about the incident\n" +
+      //     "- Modify any specific section\n" +
+      //     "- Adjust the tone or formatting\n\n" +
+      //     "Just let me know what you'd like to change and I'll help you refine it.",
+      //   timestamp: new Date().toISOString(),
+      //   draft,
+      // }
 
-      setMessages((prev) => [...prev, assistantMessage])
+      // setMessages((prev) => [...prev, assistantMessage])
       router.push(`/dashboard/claims/edit/${id}`)
       return { id }
     } catch (error) {

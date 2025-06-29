@@ -10,7 +10,7 @@ import { Plus, X } from "lucide-react"
 
 interface PeopleInvolvedSectionProps {
   data: Partial<ClaimFormData>
-  onFieldChange: (field: keyof ClaimFormData, value: any) => void
+  onFieldChange: (field: keyof ClaimFormData, value: unknown) => void
   errors?: { [K in keyof ClaimFormData]?: string }
 }
 

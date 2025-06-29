@@ -84,7 +84,7 @@ export function RoleStep({ nextButtonRef, backButtonRef }: RoleStepProps) {
     >
       {/* Header */}
       <motion.div variants={itemVariants} className="text-center space-y-2">
-        <h2 className="text-xl md:text-2xl font-semibold text-primary">What's your role?</h2>
+        <h2 className="text-xl md:text-2xl font-semibold text-primary">{`What's your role?`}</h2>
         <p className="text-sm md:text-base text-muted-foreground">
           Select your primary role to help us customize your experience
         </p>

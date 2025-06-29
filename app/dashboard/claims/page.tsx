@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { useRouter } from "next/navigation"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,7 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { toast } from "sonner"
-import { Plus, Search, FileText, Eye, Filter, ArrowUpDown, RefreshCw } from "lucide-react"
+import { Plus, Search, FileText, Eye, Filter, ArrowUpDown } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getStatusBadge, getClaimTypeLabel, formatClaimDate } from "@/lib/utils"
 import { getClaims } from '@/action/claim'
@@ -18,8 +17,10 @@ import { deleteClaim } from '@/action/claim'
 import { useClaimNavigation } from "@/hooks/useClaimNavigation"
 import ClaimModal from "@/components/claims/claim-modal"
 import { RefreshButton } from "@/components/ui/refresh-button"
+
+
+
 export default function ClaimsPage() {
-  const router = useRouter()
   const [claims, setClaims] = useState<Claim[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
@@ -85,7 +86,7 @@ export default function ClaimsPage() {
       // Update UI
       setClaims((prev) => prev.filter((claim) => claim.id !== claimId));
       toast.success(message);
-    } catch (error) {
+    } catch {
       toast.error("Something went wrong while deleting.");
     }
   };

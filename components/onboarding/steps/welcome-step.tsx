@@ -58,7 +58,7 @@ export function WelcomeStep({ nextButtonRef }: WelcomeStepProps) {
           Welcome to ClaimMate{userName ? `, ${userName}` : ""}!
         </h1>
         <p className="text-sm md:text-base text-muted-foreground max-w-lg mx-auto">
-          Let's set up your profile to help you get the most out of ClaimMate's AI-powered claims drafting tools.
+          {`Let's set up your profile to help you get the most out of ClaimMate's AI-powered claims drafting tools.`}
         </p>
       </motion.div>
 

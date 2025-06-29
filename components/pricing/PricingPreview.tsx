@@ -68,7 +68,7 @@ export default function PricingPreview() {
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-3xl font-bold text-primary mb-4">Simple, Transparent Pricing</h2>
-            <p className="text-xl text-muted-foreground">Start with a 7-day free trial, upgrade when you're ready</p>
+            <p className="text-xl text-muted-foreground">{`Start with a 7-day free trial, upgrade when you're ready`}</p>
             <p className="text-sm text-muted-foreground mt-2">Save up to 20% with annual billing</p>
           </motion.div>
         </div>

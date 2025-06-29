@@ -1,11 +1,10 @@
 "use client"
 
-import React, { useCallback, useState, useEffect } from "react"
+import React, { useCallback, useState} from "react"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
-import { motion } from "framer-motion"
 import { Eye, EyeOff, AlertCircle } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -78,7 +77,7 @@ export default function SignupPage() {
         router.push(
           `/auth/verification?email=${encodeURIComponent(values.email)}`
         )
-      } catch (err) {
+      } catch {
         setError("An unexpected error occurred. Please try again.")
       } finally {
         setIsLoading(false)

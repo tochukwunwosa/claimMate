@@ -63,7 +63,7 @@ export function FeatureGate({ feature, children, fallback }: FeatureGateProps) {
       } else {
         toast.error(result.message)
       }
-    } catch (error) {
+    } catch  {
       toast.error("Failed to start trial")
     } finally {
       setIsStartingTrial(false)

@@ -1,3 +1,4 @@
+import { ChatMessage } from '@/lib/types'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
@@ -17,7 +18,7 @@ Claim Information:
 - Description: ${claimInfo.damage_description || 'See conversation below'}
 
 Conversation Context:
-${messages.map((msg: any) => `${msg.role}: ${msg.content}`).join('\n')}
+${messages.map((msg: ChatMessage) => `${msg.role}: ${msg.content}`).join('\n')}
 
 Generate a formal, professional insurance claim letter that includes:
 1. Proper business letter format

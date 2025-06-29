@@ -22,7 +22,7 @@ interface ClaimFormProps {
 
 interface FormSectionProps {
   data: Partial<ClaimFormData>
-  onFieldChange: (field: keyof ClaimFormData, value: any) => void
+  onFieldChange: (field: keyof ClaimFormData, value: unknown) => void
   onFileUpload?: (files: FileList) => Promise<void>
   errors?: ValidationErrors
 }
@@ -46,7 +46,7 @@ export function ClaimForm({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
 
-  const handleFieldChange = (field: keyof ClaimFormData, value: any) => {
+  const handleFieldChange = (field: keyof ClaimFormData, value: unknown) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
     if (validationErrors[field]) {
       setValidationErrors((prev) => ({ ...prev, [field]: undefined }))
@@ -54,6 +54,7 @@ export function ClaimForm({
   }
 
   const handleFileUpload = async (files: FileList) => {
+    console.log("Files uploaded:", files)
     // TODO: Implement file upload logic
   }
 

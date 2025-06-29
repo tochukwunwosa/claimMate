@@ -5,7 +5,6 @@ import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
-import { motion } from "framer-motion"
 import { Eye, EyeOff, AlertCircle } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -66,7 +65,7 @@ export default function LoginPage() {
         }
 
         removeStoredEmail()
-      } catch (err) {
+      } catch {
         setError("An unexpected error occurred. Please try again.")
       } finally {
         setIsLoading(false)
@@ -92,7 +91,7 @@ export default function LoginPage() {
         )
         setError(null)
       }
-    } catch (err) {
+    } catch {
       setError("Failed to send reset password email. Please try again.")
     }
   }, [form])
@@ -197,7 +196,7 @@ export default function LoginPage() {
           Forgot password?
         </Button>
         <div className="text-center text-sm">
-          Don't have an account?{" "}
+          {`Don't have an account?`}
           <Link
             href="/auth/signup"
             className="font-medium text-primary hover:underline"

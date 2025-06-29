@@ -3,11 +3,11 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Zap, Loader2, Calculator, ArrowRight } from "lucide-react"
+import { Zap, Calculator, ArrowRight } from "lucide-react"
 import { motion } from "framer-motion"
 import { toast } from "sonner"
 import { getPlans } from "@/action/pricing"
-import { rois, benefits, faqs } from "@/const/pricing"
+import { rois, benefits } from "@/const/pricing"
 import { PricingToggle } from "@/components/pricing/pricing-toggle"
 import { PricingCard } from "@/components/pricing/pricing-card"
 import { PricingFAQ } from "@/components/pricing/pricing-faq"
@@ -18,10 +18,10 @@ import { SocialProof } from "@/components/homepage/SocialProof"
 
 export default function PricingPage() {
   const [isYearly, setIsYearly] = useState(true) // Default to yearly for better value
-  const [selectedPlan, setSelectedPlan] = useState("Professional")
+  // const [selectedPlan, setSelectedPlan] = useState("Professional")
   const [plans, setPlans] = useState<Plan[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [selectedROI, setSelectedROI] = useState(1) // Default to middle ROI option
+  // const [selectedROI, setSelectedROI] = useState(1) // Default to middle ROI option
 
   useEffect(() => {
     async function fetchPlans() {
@@ -31,7 +31,7 @@ export default function PricingPage() {
         // Set the popular plan as selected by default
         const popularPlan = plansData.find((plan) => plan.is_popular)
         if (popularPlan) {
-          setSelectedPlan(popularPlan.name)
+          // setSelectedPlan(popularPlan.name)
         }
       } catch (error) {
         console.error("Failed to fetch plans:", error)
@@ -59,7 +59,8 @@ export default function PricingPage() {
     visible: { opacity: 1, y: 0 },
   }
 
-  const selectedRoiData = rois[selectedROI]
+  // const selectedRoiData = rois[selectedROI]
+  const selectedRoiData = rois[1] // Default to adjuster ROI data
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50 px-4">
@@ -136,7 +137,7 @@ export default function PricingPage() {
             viewport={{ once: true }}
             className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16"
           >
-            {benefits.map((benefit, index) => (
+            {benefits.map((benefit) => (
               <motion.div
                 key={benefit.title}
                 variants={itemVariants}

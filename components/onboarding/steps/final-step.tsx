@@ -58,7 +58,7 @@ interface FinalStepProps {
 }
 
 export function FinalStep({ nextButtonRef }: FinalStepProps) {
-  const { completeOnboarding, isLoading, setCurrentStep } = useOnboarding()
+  const { completeOnboarding, isLoading } = useOnboarding()
   const [isCompleting, setIsCompleting] = useState(false)
   const [redirectTime, setRedirectTime] = useState<number | null>(null)
   const router = useRouter()
@@ -94,9 +94,9 @@ export function FinalStep({ nextButtonRef }: FinalStepProps) {
     }
   }, [redirectTime, isCompleting, router])
 
-  const handleBack = () => {
-    setCurrentStep(5)
-  }
+  // const handleBack = () => {
+  //   setCurrentStep(5)
+  // }
 
   const manuallyRedirect = () => {
     router.push("/dashboard")
@@ -123,7 +123,7 @@ export function FinalStep({ nextButtonRef }: FinalStepProps) {
           Setup Complete!
         </h2>
         <p className="text-sm md:text-base text-muted-foreground max-w-md mx-auto">
-          Your profile is ready. You'll be redirected to your personalized dashboard in{" "}
+          {`Your profile is ready. You'll be redirected to your personalized dashboard in `}
           <span className="text-primary font-medium">{redirectTime}</span> seconds.
         </p>
       </motion.div>

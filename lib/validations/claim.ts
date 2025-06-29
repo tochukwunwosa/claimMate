@@ -57,7 +57,7 @@ type ValidationErrors = {
 
 export { claimFormSchema, type ClaimFormData, type ValidationErrors }
 
-export const claimDraftSchema = z.object({
+const claimDraftSchema = z.object({
   claim_id: z.string(),
   content: z.string(),
   tone: z.enum(['formal', 'empathetic', 'neutral', 'urgent']),
@@ -70,3 +70,10 @@ export const claimDraftSchema = z.object({
   })).optional()
 }) 
 
+type ClaimDraftData = z.infer<typeof claimDraftSchema>
+
+type DraftValidationErrors = {
+  [K in keyof ClaimDraftData]?: string
+}
+
+export { claimDraftSchema, type ClaimDraftData, type DraftValidationErrors }

@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, use } from "react"
 import { Button } from "@/components/ui/button"
 import { Copy, Send } from "lucide-react"
-import { applyCorrection, regenerateDraft } from "@/action/ai"
+import { applyCorrection } from "@/action/ai"
 import { toast } from "sonner"
 import { getClaim } from "@/action/claim"
 import ExportButton from "@/components/export-button"
@@ -25,7 +25,7 @@ export default function GeneratePage({ params }: PageProps) {
 
   useEffect(() => {
     const loadClaim = async () => {
-      const {claim, success, message} = await getClaim(id) 
+      const {claim, success} = await getClaim(id) 
       if (success) {
         setClaim(claim)
         // Add initial AI message with the draft
@@ -141,7 +141,7 @@ export default function GeneratePage({ params }: PageProps) {
                   <div className="flex justify-end mt-2">
                     <div className="flex items-center gap-4">
                       <Copy onClick={() => handleCopy(message.content)} className="w-4 h-4 mr-2 hover:cursor-pointer hover:text-primary hover:scale-110 transition-all duration-200" />
-                      <ExportButton message={message} claim={claim} />
+                      <ExportButton message={message} client_name={claim?.client_name} />
                     </div>
                   </div>
                 )}

@@ -15,7 +15,12 @@ interface EditorProps {
   onChange?: (html: string) => void
 }
 
-const Editor = forwardRef<any, EditorProps>(({ initialContent, readOnly = false, onChange }, ref) => {
+interface EditorHandle {
+  getContent: () => string | undefined
+  setContent: (content: string) => void
+}
+
+const Editor = forwardRef<EditorHandle, EditorProps>(({ initialContent, readOnly = false, onChange }, ref) => {
   const editor = useEditor({
     extensions: [
       StarterKit,

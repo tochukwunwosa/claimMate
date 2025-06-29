@@ -6,10 +6,10 @@ import { motion } from "framer-motion"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Loader2, Star, Check, ArrowRight } from "lucide-react"
+import { Loader2, Star, ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { PricingFeatureList } from "./pricing-feature-list"
-import { formatPrice } from "@/lib/pricing"
+// import { formatPrice } from "@/lib/pricing"
 
 interface PricingCardProps {
   plan: {
@@ -38,7 +38,7 @@ export function PricingCard({ plan, features, currentPrice, savings = 0, isYearl
   }
 
   const isEnterprise = plan.name === "Enterprise"
-  const formattedPrice = isEnterprise ? "Custom" : formatPrice(currentPrice)
+  // const formattedPrice = isEnterprise ? "Custom" : formatPrice(currentPrice)
   const monthlyPrice = isEnterprise ? "Custom" : `$${(currentPrice / 100).toFixed(2)}`
 
   if (isLoading) {

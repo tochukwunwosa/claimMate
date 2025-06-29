@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { FileText, Plus, Wand2 } from "lucide-react"
+import { Plus, Wand2 } from "lucide-react"
 
 export function TemplateOptions() {
   const router = useRouter()

@@ -1,57 +1,58 @@
-import { Download } from 'lucide-react'
-import React, { useState } from 'react'
+import { Download } from "lucide-react";
+import React, { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { ExportService } from "@/lib/services/export-service"
+} from "@/components/ui/dropdown-menu";
+import { ExportService } from "@/lib/services/export-service";
 import { toast } from "sonner";
-import { Button } from './ui/button';
+import { Button } from "./ui/button";
 
-const exportService = ExportService.getInstance()
+const exportService = ExportService.getInstance();
 
 interface ExportButtonProps {
-  message: { content: string }
-  claim: { client_name: string } | null
-  draftContent: string
-  formData: any
+  message: { content: string };
+  client_name: string ;
 }
 
 interface ExportProps {
-  format: 'pdf' | 'word' | 'text'
-  draftContent: string
-  formData: any
+  format: "pdf" | "word" | "text";
+  draftContent: string;
+  client_name: string | null;
 }
 
-export default function ExportButton({ message, claim, draftContent, formData }: Partial<ExportButtonProps>) {
-  const [isExporting, setIsExporting] = useState(false)
+export default function ExportButton({
+  message,
+  client_name
+}: Partial<ExportButtonProps>) {
+  const [isExporting, setIsExporting] = useState(false);
 
-  const handleExport = async ({ format, draftContent, formData }: ExportProps) => {
-    if (!draftContent || !formData) return
+  const handleExport = async ({ format, draftContent, client_name }: ExportProps) => {
+    if (!draftContent || !client_name) return;
 
-    setIsExporting(true)
+    setIsExporting(true);
     try {
-      const fileName = `claim-draft-${formData.client_name.replace(/\s+/g, '-').toLowerCase()}`
+      const fileName = `claim-draft-${client_name.replace(/\s+/g, "-").toLowerCase()}`;
       switch (format) {
-        case 'pdf':
-          await exportService.exportAsPDF(draftContent, fileName)
-          break
-        case 'word':
-          await exportService.exportAsWord(draftContent, fileName)
-          break
-        case 'text':
-          await exportService.exportAsPlainText(draftContent, fileName)
-          break
+        case "pdf":
+          await exportService.exportAsPDF(draftContent, fileName);
+          break;
+        case "word":
+          await exportService.exportAsWord(draftContent, fileName);
+          break;
+        case "text":
+          await exportService.exportAsPlainText(draftContent, fileName);
+          break;
       }
-      toast.success(`Draft exported as ${format.toUpperCase()} successfully`)
+      toast.success(`Draft exported as ${format.toUpperCase()} successfully`);
     } catch {
-      toast.error(`Failed to export as ${format.toUpperCase()}`)
+      toast.error(`Failed to export as ${format.toUpperCase()}`);
     } finally {
-      setIsExporting(false)
+      setIsExporting(false);
     }
-  }
+  };
 
   return (
     <DropdownMenu>
@@ -67,16 +68,40 @@ export default function ExportButton({ message, claim, draftContent, formData }:
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
-        <DropdownMenuItem onClick={() => handleExport({ format: 'pdf', draftContent: message?.content || '', formData: claim })}>
+        <DropdownMenuItem
+          onClick={() =>
+            handleExport({
+              format: "pdf",
+              draftContent: message?.content || "",
+              client_name: client_name ?? null,
+            })
+          }
+        >
           Export as PDF
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleExport({ format: 'word', draftContent: message?.content || '', formData: claim })}>
+        <DropdownMenuItem
+          onClick={() =>
+            handleExport({
+              format: "word",
+              draftContent: message?.content || "",
+              client_name: client_name ?? null,
+            })
+          }
+        >
           Export as DOCX
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleExport({ format: 'text', draftContent: message?.content || ''  , formData: claim })}>
+        <DropdownMenuItem
+          onClick={() =>
+            handleExport({
+              format: "text",
+              draftContent: message?.content || "",
+              client_name: client_name ?? null,
+            })
+          }
+        >
           Export as TXT
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

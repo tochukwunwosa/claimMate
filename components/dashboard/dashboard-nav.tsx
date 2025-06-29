@@ -6,14 +6,12 @@ import { usePathname } from "next/navigation"
 import { LayoutDashboard, FileText, PlusCircle, FileBox, Users } from "lucide-react"
 import {
   SidebarHeader,
-  SidebarFooter,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
   useSidebar,
 } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
-import SidebarUser from "./sidebar-user"
 
 const navItems = [
   {

@@ -12,7 +12,7 @@ export function PricingTestimonials() {
         {testimonials.map((testimonial, index) => (
           <Card key={testimonial.content + testimonial.author.name} className={cn("h-full", index === 1 ? "border-primary shadow-md" : "")}>
             <CardContent className="p-6">
-              <p className="text-gray-700 mb-4 italic">"{testimonial.content}"</p>
+              <p className="text-gray-700 mb-4 italic">{`"${testimonial.content}"`}</p>
               <div className="flex items-center">
                 <Avatar className="h-10 w-10 mr-3">
                   <AvatarImage src={testimonial.author.avatar || "/placeholder.svg"} alt={testimonial.author.name} />

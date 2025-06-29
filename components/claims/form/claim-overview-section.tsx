@@ -14,7 +14,7 @@ import { format } from "date-fns"
 
 interface ClaimOverviewSectionProps {
   data: Partial<ClaimFormData>
-  onFieldChange: (field: keyof ClaimFormData, value: any) => void
+  onFieldChange: (field: keyof ClaimFormData, value: unknown) => void
   errors?: { [K in keyof ClaimFormData]?: string }
 }
 

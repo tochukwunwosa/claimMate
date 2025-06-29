@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server"
+
 
 export class DraftService {
   private static instance: DraftService
@@ -129,16 +129,15 @@ Claim Information:
 - Insurance Carrier: ${claimData.carrier_name}
 - Policy Number: ${claimData.policy_number}
 - Loss Date: ${claimData.loss_date}
-- Location: ${claimData.address_of_loss}, ${claimData.city}, ${claimData.state} ${claimData.zip_code}
+- Location: ${claimData.incident_location}
 
 Damage Description:
-${claimData.damage_description}
+${claimData.damages_description}
 
 Additional Notes:
-${claimData.internal_notes || "None provided"}
 
 Special Instructions:
-${claimData.special_instructions || "None provided"}
+
 
 Please format the letter professionally with appropriate sections, making sure to highlight important details. Include all relevant dates, policy numbers, and contact information in the appropriate sections.`
   }

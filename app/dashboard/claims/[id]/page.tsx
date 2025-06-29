@@ -1,34 +1,31 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, use } from "react"
 import { ClaimForm } from "@/components/claims/form/claim-form"
 import { generateNewClaimDraft } from "@/action/ai"
 import { toast } from "sonner"
 import { type ClaimFormData } from "@/lib/validations/claim"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
 import { getClaim } from "@/action/claim"
 import { Edit, Eye } from "lucide-react"
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export default function ClaimPage({ params }: PageProps) {
+  // Use React.use() to unwrap the Promise in client component
+  const { id } = use(params)
+
   const [formData, setFormData] = useState<Partial<ClaimFormData>>({})
-  const [messages, setMessages] = useState<ChatMessage[]>([])
-  const [currentDraft, setCurrentDraft] = useState<ClaimDraft | null>(null)
+  // const [messages, setMessages] = useState<ChatMessage[]>([])
+  // const [currentDraft, setCurrentDraft] = useState<ClaimDraft | null>(null)
   const router = useRouter()
   const [claim, setClaim] = useState<Claim | null>(null)
-  const [isViewModalOpen, setIsViewModalOpen] = useState(false)
+  // const [isViewModalOpen, setIsViewModalOpen] = useState(false)
 
   const handleSubmit = async (data: ClaimFormData) => {
     const promise = new Promise<{ id: string }>(async (resolve, reject) => {
@@ -37,20 +34,20 @@ export default function ClaimPage({ params }: PageProps) {
         if (result.success && result.content) {
           const draft: ClaimDraft = {
             id: Date.now().toString(),
-            claim_id: params.id,
+            claim_id: id, // Use the awaited id
             content: result.content,
             created_at: new Date().toISOString(),
           }
-          setCurrentDraft(draft)
+          // setCurrentDraft(draft)
 
-          const assistantMessage: ChatMessage = {
-            id: Date.now().toString(),
-            role: "assistant",
-            content: "I've generated a draft based on the information provided.",
-            timestamp: new Date().toISOString(),
-            draft,
-          }
-          setMessages((prev) => [...prev, assistantMessage])
+          // const assistantMessage: ChatMessage = {
+          //   id: Date.now().toString(),
+          //   role: "assistant",
+          //   content: "I've generated a draft based on the information provided.",
+          //   timestamp: new Date().toISOString(),
+          //   draft,
+          // }
+          // setMessages((prev) => [...prev, assistantMessage])
           resolve({ id: draft.id })
         } else {
           reject(new Error("Failed to generate draft"))
@@ -67,7 +64,7 @@ export default function ClaimPage({ params }: PageProps) {
       error: (error) => error.message || "Failed to generate draft",
     })
 
-    return promise
+    return await promise
   }
 
   const handleSaveDraft = async (data: Partial<ClaimFormData>) => {
@@ -91,7 +88,7 @@ export default function ClaimPage({ params }: PageProps) {
 
   useEffect(() => {
     const loadClaim = async () => {
-      const result = await getClaim(params.id)
+      const result = await getClaim(id) // Use the awaited id
       if (result.success && result.claim) {
         setClaim(result.claim)
       } else {
@@ -99,8 +96,7 @@ export default function ClaimPage({ params }: PageProps) {
       }
     }
     loadClaim()
-  }, [params.id])
-
+  }, [id]) // Update dependency
 
   if (!claim) {
     return (
@@ -120,13 +116,12 @@ export default function ClaimPage({ params }: PageProps) {
         <div className="flex gap-2">
           <Button
             variant="outline"
-            onClick={() => setIsViewModalOpen(true)}
           >
             <Eye className="w-4 h-4 mr-2" />
             View
           </Button>
           <Button
-            onClick={() => router.push(`/dashboard/claims/edit/${params.id}`)}
+            onClick={() => router.push(`/dashboard/claims/edit/${id}`)} // Use the awaited id
           >
             <Edit className="w-4 h-4 mr-2" />
             Edit
@@ -142,8 +137,6 @@ export default function ClaimPage({ params }: PageProps) {
           onSaveDraft={handleSaveDraft}
         />
       </div>
-
-
     </div>
   )
-} 
+}

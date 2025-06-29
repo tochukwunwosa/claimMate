@@ -1,7 +1,6 @@
 "use client"
 
 import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { Upload, X } from "lucide-react"
@@ -9,7 +8,7 @@ import { FormError } from "@/components/ui/form-error"
 
 interface IncidentDetailsSectionProps {
   data: Partial<ClaimFormData>
-  onFieldChange: (field: keyof ClaimFormData, value: any) => void
+  onFieldChange: (field: keyof ClaimFormData, value: unknown) => void
   onFileUpload: (files: FileList) => Promise<void>
   errors?: { [K in keyof ClaimFormData]?: string }
 }

@@ -31,16 +31,16 @@ export function FoundersLetter() {
                   Dear Fellow Insurance Professional,
                 </p>
                 <p className="mb-4">
-                  As a former insurance adjuster, I've experienced firsthand the challenges of drafting detailed property claims. The hours spent formatting documents, ensuring compliance, and maintaining consistency across claims were overwhelming. I knew there had to be a better way.
+                  {`As a former insurance adjuster, I've experienced firsthand the challenges of drafting detailed property claims. The hours spent formatting documents, ensuring compliance, and maintaining consistency across claims were overwhelming. I knew there had to be a better way.`}
                 </p>
                 <p className="mb-4">
-                  That's why I created ClaimMate. Our mission is to empower independent adjusters with AI technology that understands the nuances of insurance claims. We're not just building software; we're transforming the way claims are processed, making it faster, more accurate, and less stressful.
+                 {` That's why I created ClaimMate. Our mission is to empower independent adjusters with AI technology that understands the nuances of insurance claims. We're not just building software; we're transforming the way claims are processed, making it faster, more accurate, and less stressful.`}
                 </p>
                 <p className="mb-4">
                   Every feature in ClaimMate is designed with your workflow in mind, backed by extensive feedback from active adjusters. We understand that time saved on paperwork means more time serving your clients and growing your business.
                 </p>
                 <p className="mb-6">
-                  Thank you for considering ClaimMate. We're committed to supporting independent adjusters like you with tools that make a real difference in your daily work.
+                  {`Thank you for considering ClaimMate. We're committed to supporting independent adjusters like you with tools that make a real difference in your daily work.`}
                 </p>
                 <div className="flex items-center gap-4">
                   <div>

@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { StatsCards } from "@/components/dashboard/stats-cards"
 import { RecentClaimsTable } from "@/components/dashboard/recent-claims-table"
-import { NotificationCards } from "@/components/dashboard/notification-cards"
 import { TemplateOptions } from "@/components/dashboard/template-options"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
@@ -68,7 +67,7 @@ export default function DashboardPage() {
                 <div className="text-center py-8">
                   <h2 className="text-2xl font-semibold mb-2">Create Your First Claim</h2>
                   <p className="text-muted-foreground mb-8">
-                    Choose how you'd like to get started with your first claim.
+                    {`Choose how you'd like to get started with your first claim.`}
                   </p>
                   <TemplateOptions />
                 </div>

@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
 import { z } from "zod"
-import { waitListSchema } from "@/lib/validation"
 import { Button } from "../ui/button"
 import { Input } from "../ui/input"
 import { Textarea } from "../ui/textarea"
@@ -27,6 +26,15 @@ import { CheckCircle2 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import emailjs from '@emailjs/browser';
 import { submitWaitlistForm } from "@/action/waitlist"
+
+// Define the schema for the waitlist form
+const waitListSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address"),
+  profession: z.enum(["agent", "adjuster", "other"]).optional(),
+  painPoints: z.string().optional(),
+  featureRequests: z.string().optional(),
+});
 
 type WaitlistValues = z.infer<typeof waitListSchema>
 

@@ -11,7 +11,7 @@ export default function TermsOfService() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-primary mb-4">1. Agreement to Terms</h2>
           <p className="text-muted-foreground">
-            By accessing or using ClaimMate's services, you agree to be bound by these Terms of Service. If you disagree with any part of these terms, you may not access our services.
+            {`By accessing or using ClaimMate's services, you agree to be bound by these Terms of Service. If you disagree with any part of these terms, you may not access our services.`}
           </p>
         </section>
 

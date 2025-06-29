@@ -62,6 +62,7 @@ export function PricingCards() {
           return (
             <PricingCard
               key={plan.id}
+              isLoading={isLoading}
               plan={plan}
               features={features}
               currentPrice={currentPrice}

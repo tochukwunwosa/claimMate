@@ -50,7 +50,7 @@ export function TrialBanner() {
       } else {
         toast.error(result.message)
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to upgrade subscription")
     } finally {
       setIsUpgrading(false)

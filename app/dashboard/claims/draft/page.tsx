@@ -1,27 +1,35 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { Button } from "@/components/ui/button"
-import { ArrowLeft, Download, Loader2, RotateCcw } from "lucide-react"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { ArrowLeft, Loader2, RotateCcw } from "lucide-react"
 import { DraftService } from "@/lib/services/draft-service"
 import ExportButton from "@/components/export-button"
+import { ClaimFormData } from "@/lib/validations/claim"
 
 export default function DraftPage() {
   const router = useRouter()
-  const [formData, setFormData] = useState<any>(null)
+  const [formData, setFormData] = useState<ClaimFormData | null>(null)
   const [draftContent, setDraftContent] = useState<string>("")
   const [isLoading, setIsLoading] = useState(true)
   const [isGenerating, setIsGenerating] = useState(false)
   const draftService = DraftService.getInstance()
+
+  const generateDraft = useCallback(async (data: ClaimFormData) => {
+    setIsGenerating(true)
+    try {
+      const content = await draftService.generateFormattedDraft(data)
+      setDraftContent(content)
+    } catch {
+      toast.error("Failed to generate draft")
+    } finally {
+      setIsGenerating(false)
+      setIsLoading(false)
+    }
+  }, [draftService])
 
   useEffect(() => {
     const loadData = () => {
@@ -36,27 +44,16 @@ export default function DraftPage() {
         const parsedData = JSON.parse(savedData)
         setFormData(parsedData)
         generateDraft(parsedData)
-      } catch (error) {
+      } catch {
         toast.error("Error loading claim data")
         router.push('/dashboard')
       }
     }
 
     loadData()
-  }, [])
+  }, [generateDraft, router])
 
-  const generateDraft = async (data: any) => {
-    setIsGenerating(true)
-    try {
-      const content = await draftService.generateFormattedDraft(data)
-      setDraftContent(content)
-    } catch (error) {
-      toast.error("Failed to generate draft")
-    } finally {
-      setIsGenerating(false)
-      setIsLoading(false)
-    }
-  }
+ 
 
   const handleRegenerateDraft = async () => {
     if (!formData) return
@@ -93,7 +90,7 @@ export default function DraftPage() {
             <RotateCcw className="h-4 w-4" />
             {isGenerating ? "Regenerating..." : "Regenerate"}
           </Button>
-          <ExportButton draftContent={draftContent} formData={formData} />
+          <ExportButton  />
           <Button
             variant="outline"
             onClick={() => router.back()}

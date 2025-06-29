@@ -7,7 +7,6 @@ import { Eye, EyeOff, AlertCircle, CheckCircle } from "lucide-react"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import Link from 'next/link'
 
 import LoadingSpinner from '@/components/ui/loading-spinner'
 import { createClient } from "@/lib/supabase/client"
@@ -75,7 +74,7 @@ export default function ResetPassword() {
         }
       })
     }
-  }, [])
+  }, [supabase.auth])
 
   useEffect(() => {
     if (success) {

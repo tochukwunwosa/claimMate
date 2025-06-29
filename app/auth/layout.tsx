@@ -124,8 +124,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
             <div className="border-t border-white/10 pt-8">
               <blockquote className="text-lg text-white/90 italic">
-                "ClaimMate has completely transformed how we handle claims. The time savings and
-                professional output are incredible."
+                {`"ClaimMate has completely transformed how we handle claims. The time savings and
+                professional output are incredible."`}
               </blockquote>
               <div className="mt-4 flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center" >
