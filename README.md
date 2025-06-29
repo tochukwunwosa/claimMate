@@ -1,6 +1,6 @@
 # ClaimMate SaaS Starter
 
-> AI-powered claim drafting platform for independent insurance agents.
+> AI-powered Insurance claim drafting platform for independent insurance agents.
 
 Built with:
 - ✅ Next.js 14 (App Router)
