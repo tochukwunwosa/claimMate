@@ -11,7 +11,7 @@ import { Inter } from 'next/font/google';
 import { jsonLd } from '@/lib/jsonld';
 import { UserProvider } from '@/contexts/UserContext'
 import { Toaster } from 'sonner';
-import Footer from '@/components/Footer';
+import Footer from '@/components/footer';
 
 
 const inter = Inter({ subsets: ['latin'] });
