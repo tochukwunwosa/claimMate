@@ -47,7 +47,6 @@ export function SocialProof() {
     const scroll = () => {
       if (!containerRef.current || !contentRef.current) return
 
-      const container = containerRef.current
       const content = contentRef.current
 
       if (!isHovered) {

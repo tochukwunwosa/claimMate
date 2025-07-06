@@ -5,7 +5,6 @@ import { SocialProof } from "@/components/homepage/SocialProof"
 import { HowItWorks } from "@/components/homepage/HowItWorks"
 import { FeaturesSection } from "@/components/features-section"
 import { FAQ } from "@/components/homepage/FAQ"
-import { WaitlistSection } from "@/components/homepage/WaitlistSection"
 import { FoundersLetter } from "@/components/homepage/FoundersLetter"
 import dynamic from 'next/dynamic'
 
