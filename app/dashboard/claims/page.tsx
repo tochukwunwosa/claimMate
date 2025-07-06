@@ -5,11 +5,10 @@ import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { toast } from "sonner"
-import { Plus, Search, FileText, Eye, Filter, ArrowUpDown } from "lucide-react"
+import { Plus, Search, FileText, Eye, Filter, ArrowUpDown, MoreHorizontal, Trash2 } from "lucide-react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { getStatusBadge, getClaimTypeLabel, formatClaimDate } from "@/lib/utils"
 import { getClaims } from '@/action/claim'
@@ -17,6 +16,8 @@ import { deleteClaim } from '@/action/claim'
 import { useClaimNavigation } from "@/hooks/useClaimNavigation"
 import ClaimModal from "@/components/claims/claim-modal"
 import { RefreshButton } from "@/components/ui/refresh-button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+
 
 
 
@@ -26,7 +27,7 @@ export default function ClaimsPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [sortBy, setSortBy] = useState("newest")
-  const { handleEditClaim, handleGenerateDraft, handleCreateClaim } = useClaimNavigation()
+  const { handleCreateClaim } = useClaimNavigation()
   const [isViewModalOpen, setIsViewModalOpen] = useState(false)
   const [selectedClaim, setSelectedClaim] = useState<Claim | null>(null)
 
@@ -93,9 +94,9 @@ export default function ClaimsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col gap-5 md:gap-0 md:flex-row md:items-center md:justify-between mb-6">
         <DashboardHeader heading="Claims Management" text="View and manage all your insurance claims" />
-        <Button onClick={handleCreateClaim} className="gap-2">
+        <Button onClick={handleCreateClaim} className="gap-2 w-fit">
           <Plus className="h-4 w-4" /> Create New Claim
         </Button>
       </div>
@@ -124,7 +125,7 @@ export default function ClaimsPage() {
               />
             </div>
             <div className="flex gap-2">
-              <div className="w-[180px]">
+              <div className="max-w-[180px]">
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger className="w-full">
                     <Filter className="mr-2 h-4 w-4" />
@@ -139,7 +140,7 @@ export default function ClaimsPage() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="w-[180px]">
+              <div className="max-w-[180px]">
                 <Select value={sortBy} onValueChange={setSortBy}>
                   <SelectTrigger className="w-full">
                     <ArrowUpDown className="mr-2 h-4 w-4" />
@@ -181,7 +182,7 @@ export default function ClaimsPage() {
             </div>
           ) : (
                 <div className="w-full overflow-x-auto sm:overflow-visible lg:overflow-hidden">
-                  <div className="min-w-max">
+                  <div className="">
                     <Table>
                       <TableHeader>
                         <TableRow>
@@ -189,8 +190,8 @@ export default function ClaimsPage() {
                           <TableHead>Type</TableHead>
                           <TableHead>Created</TableHead>
                           <TableHead>Status</TableHead>
-                          <TableHead>Draft</TableHead>
-                          <TableHead className="text-right">Actions</TableHead>
+                          {/* <TableHead>Draft</TableHead> */}
+                          <TableHead >Actions</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -200,7 +201,7 @@ export default function ClaimsPage() {
                             <TableCell>{getClaimTypeLabel(claim.claim_type)}</TableCell>
                             <TableCell>{formatClaimDate(claim.created_at)}</TableCell>
                             <TableCell>{getStatusBadge(claim.status ?? "unknown")}</TableCell>
-                            <TableCell>
+                            {/* <TableCell>
                               {claim.generated_content ? (
                                 <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
                                   Available
@@ -210,41 +211,45 @@ export default function ClaimsPage() {
                                   Not Generated
                                 </Badge>
                               )}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <div className="flex justify-end gap-2">
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => handleViewClaim(claim)}
-                                  className="h-8 gap-1"
-                                >
-                                  <Eye className="h-3.5 w-3.5" />
-                                  View
-                                </Button>
-
-                                {claim.generated_content ? (
-                                  <Button size="sm" onClick={() => handleEditClaim(claim.id)} className="h-8 gap-1">
-                                    <FileText className="h-3.5 w-3.5" />
-                                    Edit Draft
+                            </TableCell> */}
+                            <TableCell className="w-[1%] whitespace-nowrap text-right">
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button
+                                    variant="outline"
+                                    size="icon"
+                                    className="h-8 w-8 p-0"
+                                  >
+                                    <MoreHorizontal className="h-4 w-4" />
                                   </Button>
-                                ) : (
-                                  <Button size="sm" onClick={() => handleGenerateDraft(claim.id)} className="h-8 gap-1">
-                                    <FileText className="h-3.5 w-3.5" />
-                                    Generate Draft
-                                  </Button>
-                                )}
-
-                                <Button
-                                  variant="destructive"
-                                  size="sm"
-                                  onClick={() => handleDeleteClaim(claim.id)}
-                                  className="h-8 gap-1"
-                                >
-                                  Delete
-                                </Button>
-                              </div>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuItem onClick={() => handleViewClaim(claim)}>
+                                    <Eye className="h-3.5 w-3.5 mr-2" />
+                                    View
+                                  </DropdownMenuItem>
+                                  {/* {claim.generated_content ? (
+                                    <DropdownMenuItem onClick={() => handleEditClaim(claim.id)}>
+                                      <FileText className="h-3.5 w-3.5 mr-2" />
+                                      Edit Draft
+                                    </DropdownMenuItem>
+                                  ) : (
+                                    <DropdownMenuItem onClick={() => handleGenerateDraft(claim.id)}>
+                                      <FileText className="h-3.5 w-3.5 mr-2" />
+                                      Generate Draft
+                                    </DropdownMenuItem>
+                                  )} */}
+                                  <DropdownMenuItem
+                                    onClick={() => handleDeleteClaim(claim.id)}
+                                    className="text-red-600 focus:bg-red-50"
+                                  >
+                                    <Trash2 className="h-3.5 w-3.5 mr-2" />
+                                    Delete
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
                             </TableCell>
+
                           </TableRow>
                         ))}
                       </TableBody>

@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from 'next/image'
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, FileText, PlusCircle, FileBox, Users } from "lucide-react"
+import { LayoutDashboard, FileText, PlusCircle } from "lucide-react"
 import {
   SidebarHeader,
   SidebarMenu,
@@ -29,18 +29,18 @@ const navItems = [
     href: "/dashboard/claims/new",
     icon: PlusCircle,
   },
-  {
-    title: "Templates",
-    // href: "/dashboard/templates",
-    href: '#',
-    icon: FileBox,
-  },
-  {
-    title: "Team",
-    // href: "/dashboard/team",
-    href: '#',
-    icon: Users,
-  },
+  // {
+  //   title: "Templates",
+  //   // href: "/dashboard/templates",
+  //   href: '#',
+  //   icon: FileBox,
+  // },
+  // {
+  //   title: "Team",
+  //   // href: "/dashboard/team",
+  //   href: '#',
+  //   icon: Users,
+  // },
 ]
 
 // Update the SidebarHeader to ensure logo and text are properly aligned and styled
