@@ -37,7 +37,7 @@ export default function Home() {
       <FAQ />
 
       {/* 13. Lead Capture / Community */}
-      <WaitlistSection />
+      {/* <WaitlistSection /> */}
 
       {/* 18. Founder's Letter */}
       <FoundersLetter />

@@ -89,7 +89,7 @@ export function Navbar() {
           whileHover="hover"
           whileTap="tap"
           className="px-4 py-2 bg-secondary text-primary font-semibold rounded-md hover:bg-secondary/90 transition-colors"
-          href="#waitlist"
+          href="/auth/signup"
         >
           Try ClaimMate Free
         </motion.a>
@@ -134,7 +134,7 @@ export function Navbar() {
                     whileHover="hover"
                     whileTap="tap"
                     className="px-4 py-2 bg-secondary text-primary font-semibold rounded-md hover:bg-secondary/90 transition-colors"
-                    href="#waitlist"
+                    href="/auth/signup"
                   >
                     Try ClaimMate Free
                   </motion.a>

@@ -15,7 +15,7 @@ export function FoundersLetter() {
           transition={{ duration: 0.5 }}
         >
           <div className="flex flex-col md:flex-row gap-8 items-start">
-            <div className="size-28 flex-shrink-0">
+            {/* <div className="size-28 flex-shrink-0">
               <Image
                 src="/images/founder-1032x1536.png"
                 width={1032}
@@ -23,7 +23,7 @@ export function FoundersLetter() {
                 alt="Tochukwu Nwosa, Founder of ClaimMate."
                 className="rounded-full size-full object-cover object-top"
               />
-            </div>
+            </div> */}
             <div>
               <h2 className="text-3xl font-bold text-primary mb-6">A Letter from Our Founder</h2>
               <div className="prose prose-lg text-muted-foreground">
@@ -47,13 +47,13 @@ export function FoundersLetter() {
                     <p className="font-semibold text-primary">Tochukwu Nwosa</p>
                     <p className="text-sm text-muted-foreground">Founder & CEO, ClaimMate</p>
                   </div>
-                  <Image
+                  {/* <Image
                     src="/images/signature.png"
                     width={120}
                     height={60}
                     alt="Founder's Signature"
                     className="opacity-80"
-                  />
+                  /> */}
                 </div>
               </div>
             </div>

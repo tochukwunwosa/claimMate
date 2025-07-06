@@ -1,7 +1,7 @@
 "use client"
 
-import { motion, useAnimationControls } from "framer-motion"
-import { useEffect, useRef, useState } from "react"
+import { useRef, useEffect, useState } from "react"
+import { motion } from "framer-motion"
 
 const testimonials = [
   {
@@ -37,57 +37,73 @@ const testimonials = [
 ]
 
 export function SocialProof() {
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const controls = useAnimationControls()
+  const containerRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const animationFrame = useRef<number>(0)
   const [isHovered, setIsHovered] = useState(false)
+  const speed = 0.5 // pixels per frame (~30px/sec @60fps)
 
   useEffect(() => {
-    const startScrolling = async () => {
-      if (isHovered) return
+    const scroll = () => {
+      if (!containerRef.current || !contentRef.current) return
 
-      await controls.start({
-        x: [0, -1920], // Adjust based on content width
-        transition: {
-          duration: 20,
-          ease: "linear",
-          repeat: Infinity,
+      const container = containerRef.current
+      const content = contentRef.current
+
+      if (!isHovered) {
+        // Move content to the left
+        const currentX = parseFloat(content.style.transform.replace("translateX(", "").replace("px)", "")) || 0
+        const newX = currentX - speed
+
+        // If we scrolled past the first full loop, reset without visual jump
+        if (Math.abs(newX) >= content.scrollWidth / 2) {
+          content.style.transform = `translateX(0px)`
+        } else {
+          content.style.transform = `translateX(${newX}px)`
         }
-      })
+      }
+
+      animationFrame.current = requestAnimationFrame(scroll)
     }
 
-    startScrolling()
-  }, [controls, isHovered])
+    animationFrame.current = requestAnimationFrame(scroll)
+
+    return () => {
+      if (animationFrame.current) cancelAnimationFrame(animationFrame.current)
+    }
+  }, [isHovered])
 
   return (
-    <section className="py-16 w-full bg-muted/50 px-4">
-      <div className="max-w-7xl mx-auto px-4 overflow-hidden">
+    <section className="py-20 w-full bg-muted/50 border-t border-muted">
+      <div className="max-w-7xl mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-2xl font-semibold text-primary mb-4">Trusted by Licensed Adjusters</h2>
-          <p className="text-muted-foreground">Built with feedback from industry professionals</p>
+          <h2 className="text-3xl font-bold text-primary mb-2">Trusted by Licensed Adjusters</h2>
+          <p className="text-muted-foreground text-lg">Built with feedback from industry professionals</p>
         </div>
+
         <div
-          className="relative"
+          ref={containerRef}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
+          className="relative overflow-hidden"
         >
-          <motion.div
-            ref={scrollRef}
-            className="flex gap-8 py-4"
-            animate={controls}
+          <div
+            ref={contentRef}
+            className="flex gap-6 py-6"
+            style={{ width: "max-content", transform: "translateX(0px)", willChange: "transform" }}
           >
-            {/* First set of testimonials */}
-            {testimonials.map((testimonial, index) => (
+            {[...testimonials, ...testimonials].map((testimonial, index) => (
               <motion.div
-                key={`${testimonial.author}-1`}
-                className="flex-shrink-0 w-[400px] bg-background p-6 rounded-lg shadow-sm"
+                key={`${testimonial.author}-${index}`}
+                className="flex-shrink-0 w-[360px] bg-background border border-muted rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: (index % testimonials.length) * 0.1 }}
               >
-                <p className="text-foreground/80 mb-4">{testimonial.quote}</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                <p className="text-muted-foreground mb-4 italic">“{testimonial.quote}”</p>
+                <div className="flex items-center gap-3 mt-6">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                     <span className="text-primary font-semibold">{testimonial.initials}</span>
                   </div>
                   <div>
@@ -97,31 +113,9 @@ export function SocialProof() {
                 </div>
               </motion.div>
             ))}
-            {/* Duplicate testimonials for seamless loop */}
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={`${testimonial.author}-2`}
-                className="flex-shrink-0 w-[400px] bg-background p-6 rounded-lg shadow-sm"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <p className="text-foreground/80 mb-4">{testimonial.quote}</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                    <span className="text-primary font-semibold">{testimonial.initials}</span>
-                  </div>
-                  <div>
-                    <p className="font-medium text-primary">{testimonial.author}</p>
-                    <p className="text-sm text-muted-foreground">{testimonial.title}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
   )
-} 
+}
